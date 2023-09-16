@@ -1,0 +1,7 @@
+Modelo de IA,Tipo de datos,Precisión,Fuente
+"Deep Belief Network (DBN)","Datos de EEG","94,5%","[Karmakar et al., 2018](https://doi.org/10.1007/s10916-018-1006-0)"
+"Redes Neuronales Recurrentes (RNN)","Datos de audio","77%","[Alhanai et al., 2018](https://aclanthology.org/N18-1317/)"
+"Redes Neuronales Recurrentes (RNN)","Datos de texto","69%","[Alhanai et al., 2018](https://aclanthology.org/N18-1317/)"
+"Convolutional Neural Network (CNN)","Datos de fMRI","82,5%","[Wang et al., 2019](https://doi.org/10.1038/s41598-019-46746-z)"
+"Support Vector Machine (SVM)","Datos de cuestionarios","70-80%","[Deng et al., 2014](https://ieeexplore.ieee.org/document/6859680)"
+"Random Forest","Datos de cuestionarios","65-75%","[Deng et al., 2014](https://ieeexplore.ieee.org/document/6859680)"

@@ -74,7 +74,21 @@ def upload_file():
     if file:
         filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(filename)
-        return jsonify({'message': 'File uploaded successfully'})
+
+        # Procesa el archivo CSV o Excel
+        if filename.endswith('.csv'):
+            df = pd.read_csv(filename)
+        elif filename.endswith(('.xls', '.xlsx')):
+            df = pd.read_excel(filename)
+        else:
+            return jsonify({'error': 'Unsupported file format'})
+
+        # Convierte el DataFrame a un formato JSON
+        data_json = df.to_json(orient='split')
+
+        # Devuelve los datos procesados en formato JSON
+        return jsonify({'data': data_json})
+
 
 def login_is_required(function):
     def wrapper(*args, **kwargs):
