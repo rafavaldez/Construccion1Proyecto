@@ -51,6 +51,30 @@ flow = Flow.from_client_secrets_file(
     redirect_uri="https://5000-alxcript-depressionapp-1yj4bhu0xju.ws-us101.gitpod.io/callback"
     )
 
+import os
+
+UPLOAD_FOLDER = os.path.join(app.root_path,"static", "archivos_analisis")
+
+
+
+# Configura la carpeta de carga
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'})
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'})
+
+    # Guarda el archivo en la carpeta UPLOAD_FOLDER
+    if file:
+        filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(filename)
+        return jsonify({'message': 'File uploaded successfully'})
 
 def login_is_required(function):
     def wrapper(*args, **kwargs):

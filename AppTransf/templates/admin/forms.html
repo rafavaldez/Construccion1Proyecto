@@ -9,6 +9,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="{{url_for('static', filename='css/tailwind.output.css')}}" />
+    <link rel="stylesheet" href="{{url_for('static', filename='css/scriptcss2.css')}}" />
     <script
       src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
       defer
@@ -469,85 +470,19 @@
             <!-- CTA -->
         
             <!-- General elements -->
-            <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
-              Descripcion del Paciente
-            </h4>
-            <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-              <form id="registroForm">
-                <label class="block text-sm">
-                  <span class="text-gray-700 dark:text-gray-400">Nombres</span>
-                  <input
-                    id="nombres"
-                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                    placeholder="Rafael Jesus"
-                  />
-                </label>
-                <br>
-        
-                <label class="block text-sm">
-                  <span class="text-gray-700 dark:text-gray-400">Apellidos</span>
-                  <input
-                    id="apellidos"
-                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                    placeholder="Valdez Apaza"
-                  />
-                </label>
-                <br>
-                <label class="block text-sm">
-                  <span class="text-gray-700 dark:text-gray-400">Dni</span>
-                  <input
-                    id="dni"
-                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                    placeholder="00798456"
-                  />
-                </label>
-        
-                <br>
-        
-                <label class="block text-sm">
-                  <span class="text-gray-700 dark:text-gray-400">Contraseña</span>
-                  <input
-                    id="contrasena"
-                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                    placeholder="00798456"
-                  />
-                </label>
-                <br>
-        
-                <label class="block text-sm">
-                  <span class="text-gray-700 dark:text-gray-400">Imagen</span>
-                  <input
-                    id="imagen"
-                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                    placeholder="00798456"
-                  />
-                </label>
-        
-                <div class="flex mt-6 text-sm">
-                  <label class="flex items-center dark:text-gray-400">
-                    <input
-                      id="agreeCheckbox"
-                      type="checkbox"
-                      class="text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray"
-                    />
-                    <span class="ml-2">
-                      Acepto la
-                      <span class="underline">política de privacidad</span>
-                    </span>
-                  </label>
-                </div>
-        
-                <div class="col-md-12">
-                  <button
-                    id="submitButton"
-                    type="submit"
-                    class="inline-flex items-center justify-center w-full px-4 py-2 text-base font-medium text-white bg-purple-600 border border-transparent rounded-md shadow-sm hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-                  >
-                    Enviar
-                  </button>
-                </div>
+            
+            <div class="wrapper">
+              <header>File Uploader JavaScript2</header>
+              <form action="#">
+                <input class="file-input" type="file" name="file" hidden>
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Browse File to Upload32</p>
               </form>
+              <section class="progress-area"></section>
+              <section class="uploaded-area"></section>
             </div>
+            
+            
           </div>
         </main>
       </div>
@@ -603,6 +538,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="{{url_for('static', filename='searchUsers.js')}}"></script>
+    <script src="{{url_for('static', filename='script2.js')}}"></script>
     
   </body>
 </html>
