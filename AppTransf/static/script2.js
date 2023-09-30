@@ -1,4 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const loaderContainer = document.querySelector('.loader-container');
+  const mostrarLoaderButton = document.getElementById('mostrar-loader');
+
+  // Agrega un manejador de eventos al botón para mostrar el loader
+  mostrarLoaderButton.addEventListener('click', () => {
+      mostrarLoader();
+  });
+
+  // Función para mostrar el loader durante 10 segundos
+  function mostrarLoader() {
+      loaderContainer.style.display = 'flex';
+      setTimeout(() => {
+          ocultarLoader();
+          window.location.href = '/admin/ResultadosAnalisis';
+      }, 5000); // 10000 milisegundos = 10 segundos
+  }
+
+  // Función para ocultar el loader y mostrar el contenido normal
+  function ocultarLoader() {
+      loaderContainer.style.display = 'none';
+  }
+
+
+
+
+
   const form = document.querySelector("form"),
     fileInput = document.querySelector(".file-input"),
     progressArea = document.querySelector(".progress-area"),
@@ -36,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Crea la tabla y agrega clases de estilo
     let table = document.createElement("table");
-    table.className = "w-full whitespace-no-wrap datatable";
+    table.className = "w-full whitespace-no-wrap datatable dataTable no-footer";
     table.id = "myTable"; // Agrega el atributo id
 
     // Crea el encabezado de la tabla (thead)
@@ -129,6 +155,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // Inicializar DataTables en la tabla recién creada
             $('#myTable').DataTable({
               lengthChange: false,
+              lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, "Todos"] ], // Define las opciones de cantidad de filas por página
+  pageLength: 25,
               searching: false,
               language: {
                 info: "Mostrando _END_ de _TOTAL_ registros",
@@ -157,3 +185,6 @@ document.addEventListener("DOMContentLoaded", function () {
     xhr.send(data);
   }
 });
+
+
+

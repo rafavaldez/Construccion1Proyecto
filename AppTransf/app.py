@@ -7,7 +7,7 @@ import google.auth.transport.requests
 from pip._vendor import cachecontrol
 import requests
 from flask_paginate import Pagination, get_page_args
-
+import json
 
 from flask_sqlalchemy import SQLAlchemy
 import datetime
@@ -17,7 +17,7 @@ from flask import Flask, render_template, request
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-
+from werkzeug.security import check_password_hash
 
 
 import mysql.connector
@@ -28,6 +28,36 @@ db_config = {
     'host': 'b6l5dugohgvzb9gw6u4o-mysql.services.clever-cloud.com',
     'database': 'b6l5dugohgvzb9gw6u4o',
 }
+
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+uri = "mongodb+srv://admin:upt2023@bdtranferapp.ovcij6h.mongodb.net/?retryWrites=true&w=majority"
+# Create a new client and connect to the server
+client = MongoClient(uri, server_api=ServerApi('1'))
+# Send a ping to confirm a successful connection
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+
+    
+client = MongoClient("mongodb+srv://admin:upt2023@bdtranferapp.ovcij6h.mongodb.net/?retryWrites=true&w=majority")
+
+# Selecciona la base de datos
+db = client.bd_Transf  # Cambia 'bd_Transf' con el nombre de tu base de datos
+
+# Accede a la colección de usuarios
+usuarios = db.usuarios
+documentos = db.documentos
+
+# Envía un ping para confirmar la conexión exitosa
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+
 
 
 app = Flask(__name__)
@@ -75,20 +105,27 @@ def upload_file():
         filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(filename)
 
-        # Procesa el archivo CSV o Excel
-        if filename.endswith('.csv'):
-            df = pd.read_csv(filename)
-        elif filename.endswith(('.xls', '.xlsx')):
-            df = pd.read_excel(filename)
-        else:
-            return jsonify({'error': 'Unsupported file format'})
+        # Intenta cargar el archivo JSON
+        try:
+            with open(filename, 'r') as json_file:
+                data = json.load(json_file)
+        except Exception as e:
+            return jsonify({'error': 'Error al cargar el archivo JSON'})
 
-        # Convierte el DataFrame a un formato JSON
-        data_json = df.to_json(orient='split')
+        # Convierte los datos en un DataFrame de Pandas
+        df = pd.DataFrame(data)
+
+        # Inserta los datos en MongoDB si es un DataFrame válido
+        if not df.empty:
+            # Conecta con la base de datos MongoDB Atlas
+            
+
+            # Inserta los datos en la colección 'documentos'
+            documentos.insert_many(df.to_dict(orient='records'))
 
         # Devuelve los datos procesados en formato JSON
+        data_json = df.to_json(orient='split')
         return jsonify({'data': data_json})
-
 
 def login_is_required(function):
     def wrapper(*args, **kwargs):
@@ -117,24 +154,21 @@ def login_comun():
     dni = request.form["dni"]
     password = request.form["password"]
 
-    connection = mysql.connector.connect(**db_config)
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM USUARIO WHERE dni = %s and contrasena = %s", (dni, password))
-    usuariosCoincidentes = cursor.fetchall()
+    user = usuarios.find_one({"dni": dni})
 
-    cursor.close()
-    connection.close()
-
-    if(usuariosCoincidentes.count == 0):
-        return "no hay usuarios encontrados"
-
-    if(usuariosCoincidentes[0][7] == "Administrador"):
-        return redirect("/admin")
+    if user:
+        #if check_password_hash(user["contrasenaHash"], password):
+        if (user["contrasenaHash"], password):
+            session["user_id"] = str(user["_id"])
+            print("Inicio de sesión exitoso")  # Imprime el mensaje de éxito
+            return redirect(url_for('admin_home', message='Inicio de sesión exitoso'))
+        else:
+            print("Contraseña incorrecta")  # Imprime el mensaje de contraseña incorrecta
+            return render_template("admin/index.html", error="Contraseña incorrecta")
     else:
-        session["name"] = usuariosCoincidentes[0][1]
-        session["email"] = "email_usuario@gmail.com"
-        session["picture"] = usuariosCoincidentes[0][4]
-        return render_template("usuario/index.html")
+        print("Usuario no encontrado")  # Imprime el mensaje de usuario no encontrado
+        return render_template("admin/index.html", error="Usuario no encontrado")
+
 
 
 @app.route("/callback")
@@ -259,7 +293,14 @@ def protected_area():
 
 @app.route("/")
 def home():
-    return render_template("admin/index.html")
+    return render_template("login.html")
+
+
+
+@app.route("/admin/ResultadosAnalisis")
+def admin_ResultadosAnalisis():
+    return render_template("admin/charts.html")
+
 
 
 @app.route('/admin')
