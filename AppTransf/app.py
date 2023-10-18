@@ -18,7 +18,7 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from werkzeug.security import check_password_hash
-
+from flask_session import Session
 
 import mysql.connector
 
@@ -67,6 +67,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Configuración de la aplicación
 app.debug = True
 
+# Configura Flask-Session
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
+
+
+
 #Authentication
 
 app.secret_key = "depressionapp"
@@ -105,21 +111,24 @@ def upload_file():
         filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(filename)
 
-        # Intenta cargar el archivo JSON
-        try:
-            with open(filename, 'r') as json_file:
-                data = json.load(json_file)
-        except Exception as e:
-            return jsonify({'error': 'Error al cargar el archivo JSON'})
+        # Guarda filename en la sesión
+        session['uploaded_filename'] = filename
 
-        # Convierte los datos en un DataFrame de Pandas
-        df = pd.DataFrame(data)
+        # Intenta cargar el archivo CSV o Excel
+        try:
+            if filename.endswith('.csv'):
+                df = pd.read_csv(filename)
+            elif filename.endswith(('.xls', '.xlsx')):
+                df = pd.read_excel(filename)
+            else:
+                return jsonify({'error': 'Formato de archivo no admitido'})
+        except Exception as e:
+            return jsonify({'error': 'Error al cargar el archivo'})
 
         # Inserta los datos en MongoDB si es un DataFrame válido
         if not df.empty:
             # Conecta con la base de datos MongoDB Atlas
             
-
             # Inserta los datos en la colección 'documentos'
             documentos.insert_many(df.to_dict(orient='records'))
 
@@ -299,7 +308,54 @@ def home():
 
 @app.route("/admin/ResultadosAnalisis")
 def admin_ResultadosAnalisis():
-    return render_template("admin/charts.html")
+    uploaded_filename = session.get('uploaded_filename')
+    if uploaded_filename is not None:
+        # Cargar los datos desde el archivo cargado y realizar el análisis
+
+        # Carga tus datos de compras en un DataFrame de pandas
+        data = pd.read_excel(uploaded_filename)
+
+        # Aplicar codificación one-hot a las características categóricas (CATEGORIA y MARCA)
+        encoder = OneHotEncoder(sparse=False, drop='first', handle_unknown='ignore')
+
+        X_encoded = encoder.fit_transform(data[['CATEGORIA', 'MARCA']])
+
+        X_numeric = data[['PRECIO_UNITARIO']].values
+        X_final = np.hstack((X_encoded, X_numeric))
+
+        media_precios_unitarios = data['PRECIO_UNITARIO'].mean()
+        desviacion_estandar_precios_unitarios = data['PRECIO_UNITARIO'].std()
+        umbral_superior = media_precios_unitarios + 2 * desviacion_estandar_precios_unitarios
+        umbral_inferior = media_precios_unitarios - 2 * desviacion_estandar_precios_unitarios
+
+        data['anomalia_etiqueta'] = [1 if precio_unitario > umbral_superior or precio_unitario < umbral_inferior else 0 for precio_unitario in data['PRECIO_UNITARIO']]
+
+        X = X_final
+
+        y = data['anomalia_etiqueta'].values
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        model = LogisticRegression()
+        model.fit(X_train, y_train)
+
+        y_pred = model.predict(X_test)
+
+        indices_anomalias = [i for i, anomalia in enumerate(y_pred) if anomalia == 1]
+
+        anomalies = data.iloc[indices_anomalias]
+        print("Filas consideradas anomalías:")
+        print(anomalies)
+
+        # Convertir el DataFrame 'data' a formato JSON
+        data_json = data.to_json(orient='split')
+
+        print(data_json)
+
+        # Finalmente, pasar los datos JSON directamente a la plantilla HTML
+        return render_template("admin/charts.html", filename=uploaded_filename, data_json=json.dumps(data_json), anomalies=anomalies)
+    else:
+        return jsonify({'error': 'No se ha cargado ningún archivo'})
+    
 
 
 
@@ -742,6 +798,24 @@ def generateResponseChatbot():
         "response": response,
         "datetime": datetime.datetime.now()
     })
+
+
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_recall_curve, roc_curve, auc, f1_score
+
+
+
+
+
 
 
 

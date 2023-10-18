@@ -21,8 +21,10 @@
 
     <link rel="stylesheet" href="{{url_for('static', filename='nuevoup.css')}}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-
-<script src="{{url_for('static', filename='script2.js')}}"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="{{url_for('static', filename='script3.js')}}"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
       defer
@@ -542,23 +544,225 @@ table.dataTable.no-footer {
                   <p
                     class="text-lg font-semibold text-gray-700 dark:text-gray-200"
                   >
-                    15
+                  <p id="total-anomalias"></p>
+
+<!-- Tu código para mostrar el mapa de calor aquí -->
+
+<script>
+    var data_json_str = {{ data_json | safe }};
+    var dataJSON = JSON.parse(data_json_str);
+
+    // Calcular la cantidad total de anomalías
+    var totalAnomalias = dataJSON.data.reduce(function (total, row) {
+        var index = dataJSON.columns.indexOf('anomalia_etiqueta');
+        var anomalia = parseInt(row[index]);
+        return total + (anomalia === 1 ? 1 : 0);
+    }, 0);
+
+    // Mostrar el total en el elemento HTML
+    document.getElementById('total-anomalias').textContent = totalAnomalias;
+</script>
                   </p>
                 </div>
               </div>
               
-              <!-- Card -->
               
             </div>
 
             
+            <div class="results w-full overflow-hidden rounded-lg shadow-xs w-full overflow-x-auto dataTables_wrapper no-footer" id="myTable_wrapper">
+              <!-- Aquí se mostrará la tabla -->
+              <div class="w-full overflow-hidden rounded-lg shadow-xs">
+                <div class="w-full overflow-x-auto">
+                  
+                  <table class="table" id="myTable">
+                    <thead>
+                      <tr>
+                        <!-- Cabeceras de columna se agregarán dinámicamente aquí -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+              
+            
+            <!-- Luego, puedes acceder a las cabeceras de columna y los datos de la siguiente manera -->
+            <script>
+              // Supongamos que data_json_str es la cadena JSON que obtienes desde el servidor
+              var data_json_str = {{ data_json | safe }};
+              
+              try {
+                // Intenta analizar la cadena JSON
+                var data_json = JSON.parse(data_json_str);
+                
+                console.log(data_json);
+                
+                var table = $('#myTable');
+
+    // Agregar las cabeceras de columna basadas en las claves del objeto "columns"
+    var columns = data_json.columns;
+    for (var i = 0; i < columns.length; i++) {
+      table.find('thead tr').append('<th>' + columns[i] + '</th>');
+    }
+
+    // Agregar filas y celdas basadas en los datos JSON
+    var rows = data_json.index;
+    for (var i = 0; i < rows.length; i++) {
+      var rowData = data_json.data[rows[i]];
+      var rowHtml = '<tr>';
+
+      for (var key in rowData) {
+        if (rowData.hasOwnProperty(key)) {
+          rowHtml += '<td>' + rowData[key] + '</td>';
+        }
+      }
+
+      rowHtml += '</tr>';
+      table.find('tbody').append(rowHtml);
+    }
+
+    // Inicializar la tabla DataTable
+    table.DataTable();
+
+  } catch (error) {
+    console.error("Error al analizar la cadena JSON:", error);
+  }
+            </script>
+              <!-- Card -->
+              
+<br>
+
 
             
 
-            
+<div
+                class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+              >
+                <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+                  Mapa de Calor de Anomalías en Departamentos
+                </h4>
+
+                <div class="flex">
+                
+            <div id="table-container"  style="margin-right: 9.5rem;" class="table dataTable no-footer">
+              <!-- La tabla generada por JavaScript se insertará aquí -->
+          </div>
+          
+            <script>
+              // Obtener el JSON de los datos (asegúrate de que esto esté definido en tu HTML)
+              var  data_json_str= {{ data_json | safe }};
+              var dataJSON = JSON.parse(data_json_str);
+              // Verificar si dataJSON está definido y tiene datos
+              var anomaliasPorDepartamento = {};
+
+// Iterar a través de tus datos y contar anomalías
+dataJSON.data.forEach(function (row) {
+  var departamento = row[dataJSON.columns.indexOf('DEPARTAMENTO')];
+  var anomalia = row[dataJSON.columns.indexOf('anomalia_etiqueta')];
+
+  if (anomaliasPorDepartamento[departamento] === undefined) {
+    anomaliasPorDepartamento[departamento] = 0;
+  }
+
+  if (anomalia === 1) {
+    anomaliasPorDepartamento[departamento]++;
+  }
+});
+
+// Crear una tabla
+var table = document.createElement('table');
+
+// Crear el encabezado de la tabla
+var thead = document.createElement('thead');
+var headerRow = thead.insertRow(0);
+headerRow.insertCell(0).textContent = 'DEPARTAMENTO';
+headerRow.insertCell(1).textContent = 'Anomalias';
+table.appendChild(thead);
+
+// Crear el cuerpo de la tabla con los departamentos y el recuento de anomalías
+var tbody = document.createElement('tbody');
+for (var departamento in anomaliasPorDepartamento) {
+  if (anomaliasPorDepartamento.hasOwnProperty(departamento)) {
+    var newRow = tbody.insertRow();
+    newRow.insertCell(0).textContent = departamento;
+    newRow.insertCell(1).textContent = anomaliasPorDepartamento[departamento];
+  }
+}
+
+table.appendChild(tbody);
+
+// Agregar la tabla a tu página HTML (reemplaza 'table-container' con el ID deseado)
+var container = document.getElementById('table-container');
+container.appendChild(table);
+</script>
+
+
+<div id="heatmap_div" style="height: 500px;"></div>
+
+<script type="text/javascript">
+
+var data_json_str = {{ data_json | safe }};
+var dataJSON = JSON.parse(data_json_str);
+
+// Inicializar un objeto para almacenar el recuento de anomalías por departamento
+var recuentoAnomaliasPorDepartamento = {};
+
+// Recorrer tus datos para calcular el recuento de anomalías por departamento
+dataJSON.data.forEach(function (row) {
+  var departamento = row[dataJSON.columns.indexOf('DEPARTAMENTO')];
+  var anomalia = row[dataJSON.columns.indexOf('anomalia_etiqueta')];
+
+  if (recuentoAnomaliasPorDepartamento[departamento] === undefined) {
+    recuentoAnomaliasPorDepartamento[departamento] = 0;
+  }
+
+  if (anomalia === 1) {
+    recuentoAnomaliasPorDepartamento[departamento]++;
+  }
+});
+
+// Crear una matriz en el formato adecuado para el mapa de calor
+var datosDepartamento = [];
+
+for (var departamento in recuentoAnomaliasPorDepartamento) {
+  if (recuentoAnomaliasPorDepartamento.hasOwnProperty(departamento)) {
+    datosDepartamento.push([departamento, recuentoAnomaliasPorDepartamento[departamento]]);
+  }
+}
+google.charts.load('current', { 'packages': ['geochart'] });
+google.charts.setOnLoadCallback(drawHeatmap);
+
+    function drawHeatmap() {
+  var data = new google.visualization.DataTable();
+  data.addColumn('string', 'DEPARTAMENTO');
+  data.addColumn('number', 'Anomalias');
+
+  data.addRows(datosDepartamento);
+
+  var options = {
+    title: 'Mapa de Calor de Anomalías por Departamento',
+    width: 600,
+    height: 400,
+    region: 'PE', // Código de país para Perú
+    displayMode: 'regions',
+    resolution: 'provinces'
+  };
+
+  var chart = new google.visualization.GeoChart(document.getElementById('heatmap_div'));
+  chart.draw(data, options);
+}
+</script></div>
+                
+              </div>
 
 
 
+          
+              
+    
             <!-- Charts -->
             <h2
               class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
@@ -657,6 +861,62 @@ table.dataTable.no-footer {
                   </div>
                 </div>
               </div>
+
+              <div id="anomalias-table"></div>
+
+              <script>
+                // Obtener el JSON de los datos (asegúrate de que esto esté definido en tu HTML)
+var data_json_str = {{ data_json | safe }};
+var datosJSON = JSON.parse(data_json_str);
+
+// Verificar si datosJSON está definido y tiene datos
+var anomaliasPorEstado = {};
+
+// Iterar a través de tus datos y contar anomalías basadas en 'ESTADO_ORDEN'
+datosJSON.data.forEach(function (row) {
+  var estadoOrden = row[datosJSON.columns.indexOf('ESTADO_ORDEN')];
+  var anomaliaEtiqueta = row[datosJSON.columns.indexOf('anomalia_etiqueta')];
+
+  // Verificar si el estado de orden está definido en anomaliasPorEstado
+  if (!anomaliasPorEstado[estadoOrden]) {
+    anomaliasPorEstado[estadoOrden] = 0;
+  }
+
+  // Contar la anomalía si es 1
+  if (anomaliaEtiqueta === 1) {
+    anomaliasPorEstado[estadoOrden]++;
+  }
+});
+
+// Crear una tabla HTML con los resultados
+var tableHTML = '<table class="table">';
+tableHTML += '<thead><tr><th>Estado Orden</th><th>Contador</th></tr></thead>';
+tableHTML += '<tbody>';
+
+// Iterar sobre los resultados y agregar filas a la tabla
+for (var estado in anomaliasPorEstado) {
+  if (anomaliasPorEstado.hasOwnProperty(estado)) {
+    tableHTML += `<tr><td>${estado}</td><td>${anomaliasPorEstado[estado]}</td></tr>`;
+    xValues.push(estado);
+    yValues.push(anomaliasPorEstado[estado]);
+  }
+}
+
+tableHTML += '</tbody></table>';
+
+// Mostrar la tabla en el contenedor especificado
+var tableContainer = document.getElementById('anomalias-table');
+tableContainer.innerHTML = tableHTML;
+
+
+
+              </script>
+
+
+
+
+
+
 
 
 
