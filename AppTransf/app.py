@@ -67,11 +67,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Configuración de la aplicación
 app.debug = True
 
-# Configura Flask-Session
+# Configura Flask-Session para almacenar sesiones en la subcarpeta 'session_data' de AppTransf.
 app.config['SESSION_TYPE'] = 'filesystem'
+app.config['SESSION_FILE_DIR'] = 'AppTransf/session_data'  # Ruta relativa a la carpeta 'AppTransf'.
 Session(app)
-
-
 
 #Authentication
 
