@@ -1,0 +1,4 @@
+name: construccion1proyecto
+services:
+  - name: web
+    command: python app.py
