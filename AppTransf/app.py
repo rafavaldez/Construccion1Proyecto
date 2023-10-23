@@ -356,7 +356,10 @@ def admin_ResultadosAnalisis():
     else:
         return jsonify({'error': 'No se ha cargado ningún archivo'})
     
-
+@app.route('/destino', methods=['GET'])
+def destino():
+    data = request.args.get('data')
+    return render_template('admin/destino.html', data=data)
 
 
 @app.route('/admin')
