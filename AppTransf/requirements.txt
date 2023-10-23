@@ -11,3 +11,4 @@ sqlalchemy
 numpy
 werkzeug
 flask-session
+Flask-SQLAlchemy
