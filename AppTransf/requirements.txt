@@ -13,3 +13,4 @@ werkzeug
 flask-session
 Flask-SQLAlchemy
 matplotlib
+seaborn
