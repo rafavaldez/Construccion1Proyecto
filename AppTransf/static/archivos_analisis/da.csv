@@ -1,0 +1,287 @@
+MARCA,CATEGORIA,PRECIO_UNITARIO,NOMBRE,DESCRIPCION,FECHA_DE_COMPRA
+Nvidia,Gráficas,499.99,GeForce RTX 3080,Tarjeta gráfica de alta gama,2023-01-05
+Sony,Consolas,399.99,PlayStation 5,Consola de próxima generación,2023-01-10
+Microsoft,Consolas,299.99,Xbox Series X,Consola de videojuegos,2023-01-15
+Logitech,Periféricos,79.99,Teclado mecánico G Pro X,Teclado mecánico para juegos,2023-01-20
+SteelSeries,Periféricos,49.99,Ratón inalámbrico Rival 650,Ratón de juego inalámbrico,2023-01-25
+Razer,Periféricos,29.99,Auriculares Kraken,Auriculares con micrófono,2023-01-30
+AMD,Procesadores,329.99,Ryzen 7 5800X,Procesador de alto rendimiento,2023-02-05
+Asus,Monitores,249.99,Monitor Gaming VG279Q,Monitor Full HD,2023-02-10
+Corsair,Periféricos,99.99,Mousepad MM300,Mousepad de tela para juegos,2023-02-15
+Sony,Consolas,199.99,PlayStation 4,Consola de videojuegos,2023-02-20
+Nvidia,Gráficas,599.99,GeForce RTX 3090,Tarjeta gráfica de gama alta,2023-02-25
+Nvidia,Gráficas,799.99,GeForce RTX 3080 Ti,Tarjeta gráfica de alta gama,2023-03-05
+Sony,Consolas,499.99,PlayStation 5 Pro,Consola de próxima generación,2023-03-10
+Microsoft,Consolas,349.99,Xbox Series S,Consola de videojuegos,2023-03-15
+Logitech,Periféricos,89.99,Teclado mecánico G Pro X2,Teclado mecánico para juegos,2023-03-20
+SteelSeries,Periféricos,59.99,Ratón inalámbrico Rival 670,Ratón de juego inalámbrico,2023-03-25
+Razer,Periféricos,39.99,Auriculares Kraken 2,Auriculares con micrófono,2023-03-30
+AMD,Procesadores,379.99,Ryzen 7 5800X2,Procesador de alto rendimiento,2023-04-05
+Asus,Monitores,299.99,Monitor Gaming VG279Q2,Monitor Full HD,2023-04-10
+Corsair,Periféricos,119.99,Mousepad MM3002,Mousepad de tela para juegos,2023-04-15
+Sony,Consolas,249.99,PlayStation 4 Pro,Consola de videojuegos,2023-04-20
+Nvidia,Gráficas,699.99,GeForce RTX 3080 Super,Tarjeta gráfica de gama alta,2023-04-25
+Nvidia,Gráficas,899.99,GeForce RTX 3080 Ti Super,Tarjeta gráfica de alta gama,2023-05-05
+Sony,Consolas,599.99,PlayStation 5 Pro Plus,Consola de próxima generación,2023-05-10
+Microsoft,Consolas,399.99,Xbox Series S Plus,Consola de videojuegos,2023-05-15
+Logitech,Periféricos,99.99,Teclado mecánico G Pro X3,Teclado mecánico para juegos,2023-05-20
+SteelSeries,Periféricos,69.99,Ratón inalámbrico Rival 690,Ratón de juego inalámbrico,2023-05-25
+Razer,Periféricos,49.99,Auriculares Kraken 3,Auriculares con micrófono,2023-05-30
+AMD,Procesadores,429.99,Ryzen 7 5800X3,Procesador de alto rendimiento,2023-06-05
+Asus,Monitores,349.99,Monitor Gaming VG279Q3,Monitor Full HD,2023-06-10
+Corsair,Periféricos,139.99,Mousepad MM3003,Mousepad de tela para juegos,2023-06-15
+Sony,Consolas,279.99,PlayStation 4 Pro Plus,Consola de videojuegos,2023-06-20
+Nvidia,Gráficas,799.99,GeForce RTX 3080 Super Plus,Tarjeta gráfica de gama alta,2023-06-25
+Nvidia,Gráficas,499.99,GeForce RTX 3080,Tarjeta gráfica de alta gama,2023-01-05
+Sony,Consolas,399.99,PlayStation 5,Consola de próxima generación,2023-01-10
+Microsoft,Consolas,299.99,Xbox Series X,Consola de videojuegos,2023-01-15
+Logitech,Periféricos,79.99,Teclado mecánico G Pro X,Teclado mecánico para juegos,2023-01-20
+SteelSeries,Periféricos,49.99,Ratón inalámbrico Rival 650,Ratón de juego inalámbrico,2023-01-25
+Razer,Periféricos,29.99,Auriculares Kraken,Auriculares con micrófono,2023-01-30
+AMD,Procesadores,329.99,Ryzen 7 5800X,Procesador de alto rendimiento,2023-02-05
+Asus,Monitores,249.99,Monitor Gaming VG279Q,Monitor Full HD,2023-02-10
+Corsair,Periféricos,99.99,Mousepad MM300,Mousepad de tela para juegos,2023-02-15
+Sony,Consolas,199.99,PlayStation 4,Consola de videojuegos,2023-02-20
+Nvidia,Gráficas,599.99,GeForce RTX 3090,Tarjeta gráfica de gama alta,2023-02-25
+Nvidia,Gráficas,799.99,GeForce RTX 3080 Ti,Tarjeta gráfica de alta gama,2023-03-05
+Sony,Consolas,499.99,PlayStation 5 Pro,Consola de próxima generación,2023-03-10
+Microsoft,Consolas,349.99,Xbox Series S,Consola de videojuegos,2023-03-15
+Logitech,Periféricos,89.99,Teclado mecánico G Pro X2,Teclado mecánico para juegos,2023-03-20
+SteelSeries,Periféricos,59.99,Ratón inalámbrico Rival 670,Ratón de juego inalámbrico,2023-03-25
+Razer,Periféricos,39.99,Auriculares Kraken 2,Auriculares con micrófono,2023-03-30
+AMD,Procesadores,379.99,Ryzen 7 5800X2,Procesador de alto rendimiento,2023-04-05
+Asus,Monitores,299.99,Monitor Gaming VG279Q2,Monitor Full HD,2023-04-10
+Corsair,Periféricos,119.99,Mousepad MM3002,Mousepad de tela para juegos,2023-04-15
+Sony,Consolas,249.99,PlayStation 4 Pro,Consola de videojuegos,2023-04-20
+Nvidia,Gráficas,699.99,GeForce RTX 3080 Super,Tarjeta gráfica de gama alta,2023-04-25
+Nvidia,Gráficas,899.99,GeForce RTX 3080 Ti Super,Tarjeta gráfica de alta gama,2023-05-05
+Nvidia,Gráficas,199.99,GeForce GT 710,Tarjeta gráfica económica,2023-05-10
+Sony,Consolas,299.99,PlayStation 3,Consola de videojuegos,2023-05-15
+Microsoft,Consolas,299.99,Xbox One,Consola de videojuegos,2023-05-20
+Microsoft,Consolas,79.99,Xbox 360,Consola de videojuegos,2023-05-25
+Microsoft,Consolas,199.99,Xbox Series S,Consola de videojuegos,2023-05-30
+Logitech,Periféricos,39.99,Teclado mecánico G Pro X3,Teclado mecánico para juegos,2023-06-05
+SteelSeries,Periféricos,59.99,Ratón inalámbrico Rival 690,Ratón de juego inalámbrico,2023-06-10
+Razer,Periféricos,29.99,Auriculares Kraken 3,Auriculares con micrófono,2023-06-15
+AMD,Procesadores,79.99,Ryzen 3 3200G,Procesador económico,2023-06-20
+Asus,Monitores,79.99,Monitor VE228H,Monitor económico,2023-06-25
+Corsair,Periféricos,19.99,Mousepad MM100,Mousepad básico,2023-06-30
+Sony,Consolas,199.99,PlayStation 4 Slim,Consola de videojuegos,2023-07-05
+Nvidia,Gráficas,299.99,GeForce GTX 1660,Tarjeta gráfica de gama media,2023-07-10
+Nvidia,Gráficas,699.99,GeForce RTX 3060 Ti,Tarjeta gráfica de gama media-alta,2023-07-15
+Sony,Consolas,299.99,PlayStation 4 Pro Slim,Consola de videojuegos,2023-07-20
+Microsoft,Consolas,199.99,Xbox Series X Slim,Consola de videojuegos,2023-07-25
+Logitech,Periféricos,29.99,Teclado básico,Teclado económico,2023-07-30
+SteelSeries,Periféricos,19.99,Ratón básico,Ratón económico,2023-08-05
+Razer,Periféricos,39.99,Auriculares básicos,Auriculares económicos,2023-08-10
+AMD,Procesadores,49.99,Ryzen 5 2400G,Procesador económico,2023-08-15
+Asus,Monitores,129.99,Monitor económico,Monitor económico,2023-08-20
+Corsair,Periféricos,9.99,Mousepad económico,Mousepad económico,2023-08-25
+Sony,Consolas,99.99,PlayStation 3 Slim,Consola de videojuegos,2023-08-30
+Nvidia,Gráficas,59.99,GeForce GT 710 Slim,Tarjeta gráfica económica,2023-09-05
+Nvidia,Gráficas,199.99,GeForce GTX 1660 Super,Tarjeta gráfica de gama media,2023-09-10
+Sony,Consolas,79.99,PlayStation 4 Slim Plus,Consola de videojuegos,2023-09-15
+Microsoft,Consolas,69.99,Xbox Series X Slim Plus,Consola de videojuegos,2023-09-20
+Logitech,Periféricos,9.99,Teclado básico 2,Teclado económico,2023-09-25
+SteelSeries,Periféricos,12.99,Ratón básico 2,Ratón económico,2023-10-05
+Razer,Periféricos,19.99,Auriculares básicos 2,Auriculares económicos,2023-10-10
+AMD,Procesadores,29.99,Ryzen 5 2400G 2,Procesador económico,2023-10-15
+Asus,Monitores,79.99,Monitor económico 2,Monitor económico,2023-10-20
+Corsair,Periféricos,5.99,Mousepad económico 2,Mousepad económico,2023-10-25
+Sony,Consolas,49.99,PlayStation 3 Slim 2,Consola de videojuegos,2023-11-05
+Nvidia,Gráficas,24.99,GeForce GT 710 Slim 2,Tarjeta gráfica económica,2023-11-10
+Nvidia,Gráficas,59.99,GeForce GTX 1660 Super 2,Tarjeta gráfica de gama media,2023-11-15
+Sony,Consolas,34.99,PlayStation 4 Slim Plus 2,Consola de videojuegos,2023-11-20
+Microsoft,Consolas,32.99,Xbox Series X Slim Plus 2,Consola de videojuegos,2023-11-25
+Logitech,Periféricos,3.99,Teclado básico 3,Teclado económico,2023-12-05
+SteelSeries,Periféricos,6.99,Ratón básico 3,Ratón económico,2023-12-10
+Razer,Periféricos,8.99,Auriculares básicos 3,Auriculares económicos,2023-12-15
+AMD,Procesadores,9.99,Ryzen 5 2400G 3,Procesador económico,2023-12-20
+Asus,Monitores,22.99,Monitor económico 3,Monitor económico,2023-12-25
+Corsair,Periféricos,2.99,Mousepad económico 3,Mousepad económico,2023-12-30
+Nvidia,Gráficas,2799.99,GeForce RTX 3080,Tarjeta gráfica de alta gama,2023-01-05
+Sony,Consolas,399.99,PlayStation 5,Consola de próxima generación,2023-01-10
+Microsoft,Consolas,299.99,Xbox Series X,Consola de videojuegos,2023-01-15
+Logitech,Periféricos,79.99,Teclado mecánico G Pro X,Teclado mecánico para juegos,2023-01-20
+SteelSeries,Periféricos,49.99,Ratón inalámbrico Rival 650,Ratón de juego inalámbrico,2023-01-25
+Razer,Periféricos,29.99,Auriculares Kraken,Auriculares con micrófono,2023-01-30
+AMD,Procesadores,329.99,Ryzen 7 5800X,Procesador de alto rendimiento,2023-02-05
+Asus,Monitores,249.99,Monitor Gaming VG279Q,Monitor Full HD,2023-02-10
+Corsair,Periféricos,99.99,Teclado mecánico K70,Teclado mecánico para juegos,2023-02-15
+Sony,Consolas,499.99,PlayStation 4,Consola de videojuegos,2023-02-20
+Nvidia,Gráficas,599.99,GeForce RTX 3090,Tarjeta gráfica de gama alta,2023-02-25
+Nvidia,Gráficas,799.99,GeForce RTX 3080 Ti,Tarjeta gráfica de alta gama,2023-03-05
+Sony,Consolas,499.99,PlayStation 5 Pro,Consola de próxima generación,2023-03-10
+Microsoft,Consolas,349.99,Xbox Series S,Consola de videojuegos,2023-03-15
+Logitech,Periféricos,89.99,Teclado mecánico G Pro X2,Teclado mecánico para juegos,2023-03-20
+SteelSeries,Periféricos,59.99,Ratón inalámbrico Rival 670,Ratón de juego inalámbrico,2023-03-25
+Razer,Periféricos,39.99,Auriculares Kraken 2,Auriculares con micrófono,2023-03-30
+AMD,Procesadores,379.99,Ryzen 7 5800X2,Procesador de alto rendimiento,2023-04-05
+Asus,Monitores,299.99,Monitor Gaming VG279Q2,Monitor Full HD,2023-04-10
+Corsair,Periféricos,119.99,Mousepad MM3002,Mousepad de tela para juegos,2023-04-15
+Sony,Consolas,249.99,PlayStation 4 Pro,Consola de videojuegos,2023-04-20
+Nvidia,Gráficas,699.99,GeForce RTX 3080 Super,Tarjeta gráfica de gama alta,2023-04-25
+Nvidia,Gráficas,999.99,GeForce RTX 3080 Ti Super,Tarjeta gráfica de alta gama,2023-05-05
+Nvidia,Gráficas,199.99,GeForce GT 710,Tarjeta gráfica económica,2023-05-10
+Sony,Consolas,299.99,PlayStation 3,Consola de videojuegos,2023-05-15
+Microsoft,Consolas,399.99,Xbox One,Consola de videojuegos,2023-05-20
+Microsoft,Consolas,99.99,Xbox 360,Consola de videojuegos,2023-05-25
+Microsoft,Consolas,199.99,Xbox Series S,Consola de videojuegos,2023-05-30
+Logitech,Periféricos,29.99,Teclado mecánico K70,Teclado mecánico para juegos,2023-06-05
+SteelSeries,Periféricos,59.99,Ratón inalámbrico Rival 670,Ratón de juego inalámbrico,2023-06-10
+Razer,Periféricos,39.99,Auriculares Kraken 3,Auriculares con micrófono,2023-06-15
+AMD,Procesadores,79.99,Ryzen 5 2400G,Procesador económico,2023-06-20
+Asus,Monitores,79.99,Monitor VE228H,Monitor económico,2023-06-25
+Corsair,Periféricos,19.99,Mousepad MM100,Mousepad básico,2023-06-30
+Sony,Consolas,199.99,PlayStation 4 Slim,Consola de videojuegos,2023-07-05
+Nvidia,Gráficas,299.99,GeForce GTX 1660,Tarjeta gráfica de gama media,2023-07-10
+Nvidia,Gráficas,699.99,GeForce RTX 3060 Ti,Tarjeta gráfica de gama media-alta,2023-07-15
+Sony,Consolas,299.99,PlayStation 4 Pro Slim,Consola de videojuegos,2023-07-20
+Microsoft,Consolas,199.99,Xbox Series X Slim,Consola de videojuegos,2023-07-25
+Logitech,Periféricos,29.99,Teclado básico,Teclado económico,2023-07-30
+SteelSeries,Periféricos,19.99,Ratón básico,Ratón económico,2023-08-05
+Razer,Periféricos,29.99,Auriculares básicos,Auriculares económicos,2023-08-10
+AMD,Procesadores,29.99,Ryzen 5 2400G 2,Procesador económico,2023-08-15
+Asus,Monitores,99.99,Monitor económico,Monitor económico,2023-08-20
+Corsair,Periféricos,19.99,Mousepad económico,Mousepad económico,2023-08-25
+Sony,Consolas,79.99,PlayStation 4 Slim Plus,Consola de videojuegos,2023-09-05
+Nvidia,Gráficas,199.99,GeForce GTX 1660 Super,Tarjeta gráfica de gama media,2023-09-10
+Sony,Consolas,79.99,PlayStation 4 Slim Plus,Consola de videojuegos,2023-09-15
+Microsoft,Consolas,69.99,Xbox Series X Slim Plus,Consola de videojuegos,2023-09-20
+Logitech,Periféricos,9.99,Teclado básico 2,Teclado económico,2023-09-25
+SteelSeries,Periféricos,12.99,Ratón básico 2,Ratón económico,2023-10-05
+Razer,Periféricos,19.99,Auriculares básicos 2,Auriculares económicos,2023-10-10
+AMD,Procesadores,29.99,Ryzen 5 2400G 2,Procesador económico,2023-10-15
+Asus,Monitores,79.99,Monitor económico 2,Monitor económico,2023-10-20
+Corsair,Periféricos,5.99,Mousepad económico 2,Mousepad económico,2023-10-25
+Sony,Consolas,49.99,PlayStation 3 Slim 2,Consola de videojuegos,2023-11-05
+Nvidia,Gráficas,24.99,GeForce GT 710 Slim 2,Tarjeta gráfica económica,2023-11-10
+Nvidia,Gráficas,59.99,GeForce GTX 1660 Super 2,Tarjeta gráfica de gama media,2023-11-15
+Sony,Consolas,34.99,PlayStation 4 Slim Plus 2,Consola de videojuegos,2023-11-20
+Microsoft,Consolas,32.99,Xbox Series X Slim Plus 2,Consola de videojuegos,2023-11-25
+Logitech,Periféricos,3.99,Teclado básico 3,Teclado económico,2023-12-05
+SteelSeries,Periféricos,6.99,Ratón básico 3,Ratón económico,2023-12-10
+Razer,Periféricos,8.99,Auriculares básicos 3,Auriculares económicos,2023-12-15
+AMD,Procesadores,9.99,Ryzen 5 2400G 3,Procesador económico,2023-12-20
+Asus,Monitores,22.99,Monitor económico 3,Monitor económico,2023-12-25
+Corsair,Periféricos,2.99,Mousepad económico 3,Mousepad económico,2023-12-30
+Nvidia,Gráficas,799.99,GeForce RTX 3080,Tarjeta gráfica de alta gama,2023-01-05
+Sony,Consolas,399.99,PlayStation 5,Consola de próxima generación,2023-01-10
+Microsoft,Consolas,299.99,Xbox Series X,Consola de videojuegos,2023-01-15
+Logitech,Periféricos,79.99,Teclado mecánico G Pro X,Teclado mecánico para juegos,2023-01-20
+SteelSeries,Periféricos,49.99,Ratón inalámbrico Rival 650,Ratón de juego inalámbrico,2023-01-25
+Razer,Periféricos,29.99,Auriculares Kraken,Auriculares con micrófono,2023-01-30
+AMD,Procesadores,329.99,Ryzen 7 5800X,Procesador de alto rendimiento,2023-02-05
+Asus,Monitores,249.99,Monitor Gaming VG279Q,Monitor Full HD,2023-02-10
+Corsair,Periféricos,99.99,Teclado mecánico K70,Teclado mecánico para juegos,2023-02-15
+Sony,Consolas,499.99,PlayStation 4,Consola de videojuegos,2023-02-20
+Nvidia,Gráficas,599.99,GeForce RTX 3090,Tarjeta gráfica de gama alta,2023-02-25
+Nvidia,Gráficas,799.99,GeForce RTX 3080 Ti,Tarjeta gráfica de alta gama,2023-03-05
+Sony,Consolas,499.99,PlayStation 5 Pro,Consola de próxima generación,2023-03-10
+Microsoft,Consolas,349.99,Xbox Series S,Consola de videojuegos,2023-03-15
+Logitech,Periféricos,89.99,Teclado mecánico G Pro X2,Teclado mecánico para juegos,2023-03-20
+SteelSeries,Periféricos,59.99,Ratón inalámbrico Rival 670,Ratón de juego inalámbrico,2023-03-25
+Razer,Periféricos,39.99,Auriculares Kraken 2,Auriculares con micrófono,2023-03-30
+AMD,Procesadores,379.99,Ryzen 7 5800X2,Procesador de alto rendimiento,2023-04-05
+Asus,Monitores,299.99,Monitor Gaming VG279Q2,Monitor Full HD,2023-04-10
+Corsair,Periféricos,119.99,Mousepad MM3002,Mousepad de tela para juegos,2023-04-15
+Sony,Consolas,249.99,PlayStation 4 Pro,Consola de videojuegos,2023-04-20
+Nvidia,Gráficas,699.99,GeForce RTX 3080 Super,Tarjeta gráfica de gama alta,2023-04-25
+Nvidia,Gráficas,999.99,GeForce RTX 3080 Ti Super,Tarjeta gráfica de alta gama,2023-05-05
+Nvidia,Gráficas,199.99,GeForce GT 710,Tarjeta gráfica económica,2023-05-10
+Sony,Consolas,299.99,PlayStation 3,Consola de videojuegos,2023-05-15
+Microsoft,Consolas,399.99,Xbox One,Consola de videojuegos,2023-05-20
+Microsoft,Consolas,99.99,Xbox 360,Consola de videojuegos,2023-05-25
+Microsoft,Consolas,199.99,Xbox Series S,Consola de videojuegos,2023-05-30
+Logitech,Periféricos,29.99,Teclado mecánico K70,Teclado mecánico para juegos,2023-06-05
+SteelSeries,Periféricos,59.99,Ratón inalámbrico Rival 670,Ratón de juego inalámbrico,2023-06-10
+Razer,Periféricos,39.99,Auriculares Kraken 3,Auriculares con micrófono,2023-06-15
+AMD,Procesadores,79.99,Ryzen 5 2400G,Procesador económico,2023-06-20
+Asus,Monitores,79.99,Monitor VE228H,Monitor económico,2023-06-25
+Corsair,Periféricos,19.99,Mousepad MM100,Mousepad básico,2023-06-30
+Sony,Consolas,199.99,PlayStation 4 Slim,Consola de videojuegos,2023-07-05
+Nvidia,Gráficas,299.99,GeForce GTX 1660,Tarjeta gráfica de gama media,2023-07-10
+Nvidia,Gráficas,699.99,GeForce RTX 3060 Ti,Tarjeta gráfica de gama media-alta,2023-07-15
+Sony,Consolas,299.99,PlayStation 4 Pro Slim,Consola de videojuegos,2023-07-20
+Microsoft,Consolas,199.99,Xbox Series X Slim,Consola de videojuegos,2023-07-25
+Logitech,Periféricos,29.99,Teclado básico,Teclado económico,2023-07-30
+SteelSeries,Periféricos,19.99,Ratón básico,Ratón económico,2023-08-05
+Razer,Periféricos,29.99,Auriculares básicos,Auriculares económicos,2023-08-10
+AMD,Procesadores,29.99,Ryzen 5 2400G 2,Procesador económico,2023-08-15
+Asus,Monitores,99.99,Monitor económico,Monitor económico,2023-08-20
+Corsair,Periféricos,19.99,Mousepad MM1002,Mousepad de tela económico,2023-08-25
+Sony,Consolas,79.99,PlayStation 4 Slim Plus,Consola de videojuegos,2023-09-05
+Nvidia,Gráficas,199.99,GeForce GTX 1660 Super,Tarjeta gráfica de gama media,2023-09-10
+Sony,Consolas,79.99,PlayStation 4 Slim Plus,Consola de videojuegos,2023-09-15
+Microsoft,Consolas,69.99,Xbox Series X Slim Plus,Consola de videojuegos,2023-09-20
+Logitech,Periféricos,9.99,Teclado básico 2,Teclado económico,2023-09-25
+SteelSeries,Periféricos,12.99,Ratón básico 2,Ratón económico,2023-10-05
+Razer,Periféricos,19.99,Auriculares básicos 2,Auriculares económicos,2023-10-10
+AMD,Procesadores,29.99,Ryzen 5 2400G 2,Procesador económico,2023-10-15
+Asus,Monitores,79.99,Monitor económico 2,Monitor económico,2023-10-20
+Corsair,Periféricos,5.99,Mousepad MM1003,Mousepad de tela económico,2023-10-25
+Sony,Consolas,49.99,PlayStation 3 Slim 2,Consola de videojuegos,2023-11-05
+Sony,Consolas,34.99,PlayStation 4 Slim Plus 2,Consola de videojuegos,2023-11-20
+Microsoft,Consolas,32.99,Xbox Series X Slim Plus 2,Consola de videojuegos,2023-11-25
+Logitech,Periféricos,3.99,Teclado básico 3,Teclado económico,2023-12-05
+SteelSeries,Periféricos,6.99,Ratón básico 3,Ratón económico,2023-12-10
+Razer,Periféricos,8.99,Auriculares básicos 3,Auriculares económicos,2023-12-15
+AMD,Procesadores,9.99,Ryzen 5 2400G 3,Procesador económico,2023-12-20
+Asus,Monitores,22.99,Monitor económico 3,Monitor económico,2023-12-25
+Corsair,Periféricos,2.99,Mousepad MM1004,Mousepad de tela económico,2023-12-30
+AMD,Procesadores,159.99,Ryzen 9 5900X,Procesador de alto rendimiento,2023-01-05
+Corsair,Periféricos,89.99,Teclado mecánico K70,Teclado mecánico para juegos,2023-01-10
+Logitech,Periféricos,59.99,Ratón inalámbrico G Pro X,Ratón de juego inalámbrico,2023-01-15
+Sony,Consolas,499.99,PlayStation 5,Consola de próxima generación,2023-01-20
+Asus,Monitores,359.99,Monitor Gaming VG279Q,Monitor Full HD,2023-01-25
+AMD,Procesadores,159.99,Ryzen 9 5900X,Procesador de alto rendimiento,2023-01-05
+Corsair,Periféricos,89.99,Teclado mecánico K70,Teclado mecánico para juegos,2023-01-10
+Logitech,Periféricos,59.99,Ratón inalámbrico G Pro X,Ratón de juego inalámbrico,2023-01-15
+Sony,Consolas,499.99,PlayStation 5,Consola de próxima generación,2023-01-20
+Asus,Monitores,359.99,Monitor Gaming VG279Q,Monitor Full HD,2023-01-25
+MSI,Monitores,429.99,Monitor Optix MAG241C,Monitor curvo para juegos,2023-02-20
+AMD,Procesadores,159.99,Ryzen 9 5900X,Procesador de alto rendimiento,2023-01-05
+Corsair,Periféricos,89.99,Teclado mecánico K70,Teclado mecánico para juegos,2023-01-10
+Logitech,Periféricos,59.99,Ratón inalámbrico G Pro X,Ratón de juego inalámbrico,2023-01-15
+Sony,Consolas,499.99,PlayStation 5,Consola de próxima generación,2023-01-20
+Asus,Monitores,359.99,Monitor Gaming VG279Q,Monitor Full HD,2023-01-25
+MSI,Monitores,429.99,Monitor Optix MAG241C,Monitor curvo para juegos,2023-02-20
+AMD,Procesadores,119.99,Ryzen 5 5600X,Procesador de gama alta,2023-03-05
+Corsair,Periféricos,79.99,Teclado mecánico K95 RGB Platinum XT,Teclado mecánico premium,2023-03-10
+Logitech,Periféricos,69.99,Ratón inalámbrico G Pro X Superlight,Ratón de juego ligero,2023-03-15
+Sony,Consolas,399.99,PlayStation 4 Pro,Consola de videojuegos,2023-03-20
+Asus,Monitores,299.99,Monitor TUF Gaming VG27AQ,Monitor QHD,2023-03-25
+MSI,Monitores,399.99,Monitor Prestige PS341WU,Monitor ultrapanorámico,2023-04-20
+AMD,Procesadores,799.99,Ryzen 9 5900X,Procesador de alto rendimiento,2023-01-05
+Corsair,Periféricos,149.99,Teclado mecánico K70,Teclado mecánico para juegos,2023-01-10
+Logitech,Periféricos,139.99,Ratón inalámbrico G Pro X,Ratón de juego inalámbrico,2023-01-15
+Sony,Consolas,899.99,PlayStation 5,Consola de próxima generación,2023-01-20
+Asus,Monitores,499.99,Monitor Gaming VG279Q,Monitor Full HD,2023-01-25
+Intel,Procesadores,299.99,Core i9-12900K,Procesador de gama alta,2023-02-05
+Kingston,Almacenamiento,199.99,SSD A2000 1TB,Unidad de estado sólido,2023-02-10
+Razer,Periféricos,129.99,Ratón DeathAdder V2,Ratón de juego con sensor óptico,2023-02-15
+Microsoft,Consolas,699.99,Xbox Series X,Consola de próxima generación,2023-02-20
+Dell,Monitores,399.99,Monitor S2719DGF,Monitor QHD para juegos,2023-02-25
+Lenovo,Portátiles,899.99,ThinkPad X1 Carbon,Portátil empresarial ultraligero,2023-03-05
+AMD,Procesadores,799.99,Ryzen 9 5900X,Procesador de alto rendimiento,2023-03-10
+Corsair,Periféricos,169.99,Teclado mecánico K70,Teclado mecánico para juegos,2023-03-15
+Logitech,Periféricos,159.99,Ratón inalámbrico G Pro X,Ratón de juego inalámbrico,2023-03-20
+Sony,Consolas,799.99,PlayStation 5,Consola de próxima generación,2023-03-25
+Asus,Monitores,399.99,Monitor Gaming VG279Q,Monitor Full HD,2023-04-05
+Intel,Procesadores,259.99,Core i9-12900K,Procesador de gama alta,2023-04-10
+Kingston,Almacenamiento,169.99,SSD A2000 1TB,Unidad de estado sólido,2023-04-15
+Razer,Periféricos,149.99,Ratón DeathAdder V2,Ratón de juego con sensor óptico,2023-04-20
+Microsoft,Consolas,599.99,Xbox Series X,Consola de próxima generación,2023-04-25
+Dell,Monitores,299.99,Monitor S2719DGF,Monitor QHD para juegos,2023-05-05
+Lenovo,Portátiles,799.99,ThinkPad X1 Carbon,Portátil empresarial ultraligero,2023-05-10
+AMD,Procesadores,699.99,Ryzen 9 5900X,Procesador de alto rendimiento,2023-05-15
+Corsair,Periféricos,159.99,Teclado mecánico K70,Teclado mecánico para juegos,2023-05-20
+Logitech,Periféricos,149.99,Ratón inalámbrico G Pro X,Ratón de juego inalámbrico,2023-05-25
+Sony,Consolas,749.99,PlayStation 5,Consola de próxima generación,2023-06-05
+Asus,Monitores,349.99,Monitor Gaming VG279Q,Monitor Full HD,2023-06-10
+Intel,Procesadores,219.99,Core i9-12900K,Procesador de gama alta,2023-06-15
+Kingston,Almacenamiento,149.99,SSD A2000 1TB,Unidad de estado sólido,2023-06-20
+Razer,Periféricos,139.99,Ratón DeathAdder V2,Ratón de juego con sensor óptico,2023-06-25
+Microsoft,Consolas,499.99,Xbox Series X,Consola de próxima generación,2023-07-05
+Dell,Monitores,249.99,Monitor S2719DGF,Monitor QHD para juegos,2023-07-10
+Lenovo,Portátiles,699.99,ThinkPad X1 Carbon,Portátil empresarial ultraligero,2023-07-15

@@ -90,7 +90,27 @@ import os
 
 UPLOAD_FOLDER = os.path.join(app.root_path,"static", "archivos_analisis")
 
+@app.route("/api/usuarios2", methods=["POST"])
+def registrar_usuario2():
+    data = request.get_json()
 
+    if data:
+        nuevo_usuario = {
+            "nombreUsuario": data.get("nombreUsuario"),
+            "nombre": data.get("nombre"),
+            "apellido": data.get("apellido"),
+            "dni": data.get("dni"),
+            "correoElectronico": data.get("correoElectronico"),
+            "contrasenaHash": data.get("contrasenaHash"),
+            "fechaRegistro": data.get("fechaRegistro"),
+            "roles": data.get("roles"),
+        }
+
+        usuarios.insert_one(nuevo_usuario)
+
+        return jsonify({"mensaje": "Usuario registrado exitosamente"}), 201
+
+    return jsonify({"mensaje": "Error al registrar usuario"}), 400
 
 # Configura la carpeta de carga
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -305,6 +325,10 @@ def home():
 
 
 
+
+
+# IA UNIDAD2 - VERSION 1.0
+'''
 @app.route("/admin/ResultadosAnalisis")
 def admin_ResultadosAnalisis():
     uploaded_filename = session.get('uploaded_filename')
@@ -354,35 +378,171 @@ def admin_ResultadosAnalisis():
         return render_template("admin/charts.html", filename=uploaded_filename, data_json=json.dumps(data_json), anomalies=anomalies)
     else:
         return jsonify({'error': 'No se ha cargado ningún archivo'})
-    
-@app.route('/destino', methods=['GET'])
-def destino():
-    data = request.args.get('data')
-    return render_template('admin/destino.html', data=data)
+'''
 
+
+
+
+# IA UNIDAD2 - VERSION 2.0
+
+def find_price_column(data):
+    possible_price_columns = ["precio_unitario", "precio_unidad", "precio", "precio c/u"]
+
+    for column in data.columns:
+        if any(keyword in column.lower() for keyword in possible_price_columns):
+            return column
+
+    return None
+
+@app.route("/admin/ResultadosAnalisis")
+def admin_ResultadosAnalisis():
+    uploaded_filename = session.get('uploaded_filename')
+    if uploaded_filename is not None:
+        if uploaded_filename.endswith(('.csv', '.xls', '.xlsx')):
+            data = pd.read_csv(uploaded_filename) if uploaded_filename.endswith('.csv') else pd.read_excel(uploaded_filename)
+        else:
+            return jsonify({'error': 'Formato de archivo no admitido. Cargue un archivo CSV o Excel.'})
+
+        data.columns = [col.lower() for col in data.columns]  # Convertir a minúsculas
+        categorias_column = next((col for col in data.columns if 'categoria' in col), None)
+        marcas_column = next((col for col in data.columns if 'marca' in col), None)
+        precio_unitario_column = find_price_column(data)
+
+        if categorias_column and marcas_column and precio_unitario_column:
+            encoder = OneHotEncoder(sparse=False, drop='first', handle_unknown='ignore')
+            X_encoded = encoder.fit_transform(data[[categorias_column, marcas_column]])
+
+            X_numeric = data[precio_unitario_column].values
+            X_final = np.column_stack((X_encoded, X_numeric))
+
+            # Calcula umbrales separados para cada categoría y marca
+            unique_categories = data[categorias_column].unique()
+            unique_brands = data[marcas_column].unique()
+            
+            thresholds = {}
+
+            for category in unique_categories:
+                for brand in unique_brands:
+                    subset = data[(data[categorias_column] == category) & (data[marcas_column] == brand)]
+                    mean = subset[precio_unitario_column].mean()
+                    std = subset[precio_unitario_column].std()
+                    upper_threshold = mean + 2 * std
+                    lower_threshold = mean - 2 * std
+                    thresholds[(category, brand)] = (upper_threshold, lower_threshold)
+
+            data['anomalia_etiqueta'] = [1 if (row[precio_unitario_column] > thresholds[(row[categorias_column], row[marcas_column])][0] or row[precio_unitario_column] < thresholds[(row[categorias_column], row[marcas_column])][1]) else 0 for _, row in data.iterrows()]
+
+            X = X_final
+            y = data['anomalia_etiqueta'].values
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+            model = LogisticRegression()
+            model.fit(X_train, y_train)
+
+            y_pred = model.predict(X_test)
+
+            indices_anomalías = [i for i, anomalía in enumerate(y_pred) if anomalía == 1]
+
+            anomalías = data.iloc[indices_anomalías]
+
+            data.columns = [col.upper() if col != 'anomalia_etiqueta' else col for col in data.columns]  # Convertir a mayúsculas
+
+            data_json = data.to_json(orient='split')
+
+            return render_template("admin/charts.html", filename=uploaded_filename, data_json=json.dumps(data_json), anomalies=anomalías)
+        else:
+            return jsonify({'error': 'No se encontraron columnas relacionadas a CATEGORIA, MARCA y PRECIO'})
+    else:
+        return jsonify({'error': 'No se ha cargado ningún archivo'})
+
+
+
+
+from flask import Flask, render_template, redirect, url_for, request
+
+
+
+# Aquí está tu vista original
+@app.route('/admin/destino', methods=['POST'])
+def destino():
+    print("Llegó a destino")
+    data = request.get_json()
+    
+
+    # Accede a la fila seleccionada y al conjunto completo de datos
+    selected_row = data.get('selectedRow', {})
+    all_data = data.get('allData', {})
+
+    # Almacena los datos en la sesión del usuario
+    session['selected_row'] = selected_row
+    session['all_data'] = all_data
+
+    return "Datos almacenados en la sesión"
+
+# Vista corregida, sin el argumento 'name'
+@app.route('/admin/destino', methods=['GET'])  # Cambiado a 'GET' para que pueda ser accesible directamente
+def admin_destino():
+    # Recupera los datos almacenados en la sesión
+    selected_row = session.pop('selected_row', {})
+    all_data = session.pop('all_data', {})
+
+    # Tu lógica para renderizar la plantilla
+    return render_template('admin/destino.html', selected_row=selected_row, all_data=all_data)
+
+
+
+@app.route("/api/usuarios/editar", methods=["POST"])
+def editar_usuario():
+    data = request.get_json()
+
+    if data:
+        document_id = data.get("document_id")
+        nuevos_datos = {
+            "nombreUsuario": data.get("nombreUsuario"),
+            "nombre": data.get("nombre"),
+            "apellido": data.get("apellido"),
+            "dni": data.get("dni"),
+            "correoElectronico": data.get("correoElectronico"),
+            "contrasenaHash": data.get("contrasenaHash"),
+            "fechaRegistro": data.get("fechaRegistro"),
+            "roles": data.get("roles"),
+        }
+
+        # Llama a la función de edición del documento que proporcioné antes
+        editar_documento(document_id, nuevos_datos)
+
+        return jsonify({"mensaje": "Usuario editado exitosamente"}), 200
+
+    return jsonify({"mensaje": "Error al editar usuario"}), 400
+from bson.objectid import ObjectId
+@app.route("/api/usuarios2/eliminar/<string:document_id>", methods=["DELETE"])
+def eliminar_usuario(document_id):
+    try:
+        # Convierte el string document_id en un ObjectId válido
+        obj_id = ObjectId(document_id)
+        
+        # Elimina el documento con el ObjectId proporcionado
+        result = usuarios.delete_one({"_id": obj_id})
+        
+        if result.deleted_count > 0:
+            return jsonify({"mensaje": "Usuario eliminado exitosamente"}), 200
+        else:
+            return jsonify({"mensaje": "Usuario no encontrado"}), 404
+    except Exception as e:
+        return jsonify({"mensaje": str(e)}), 500
+
+
+
+from bson import json_util
+from flask import json
 
 @app.route('/admin')
 def admin_home():
-    # Establecer la conexión a la base de datos
-    connection = mysql.connector.connect(**db_config)
-    cursor = connection.cursor()
+    detalles_list = list(usuarios.find({}))  # Incluimos el campo _id
 
+    detalles_list_json = json.dumps(detalles_list, default=json_util.default)
 
-    # Ejecutar la consulta SQL
-    query = "SELECT U.nombre, U.dni, DD.id_etapa, DD.score_etapa, DD.estado_etapa, U.imagen FROM USUARIO U JOIN DIAGNOSTICO D ON U.id = D.id_usuario JOIN DETALLES_DIAGNOSTICO DD ON D.id = DD.id_diagnostico"
-    
-    cursor.execute(query)
-    detalles_list = cursor.fetchall()
-
-    # Imprimir los detalles obtenidos
-    for detalle in detalles_list:
-        print(detalle)
-
-    # Cerrar el cursor y la conexión a la base de datos
-    cursor.close()
-    connection.close()
-
-    return render_template('admin/index.html', detalles_list=detalles_list)
+    return render_template('admin/index.html', detalles_list=detalles_list, detalles_list_json=detalles_list_json)
 
 
 @app.route('/admin/resultado/<int:usuario_id>')

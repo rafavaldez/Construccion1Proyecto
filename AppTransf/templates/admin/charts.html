@@ -575,7 +575,11 @@ table.dataTable.no-footer {
               
             </div>
 
-            
+            <h2
+              class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
+            >
+              Tabla de Anomalias
+            </h2>
             <div class="results w-full overflow-hidden rounded-lg shadow-xs w-full overflow-x-auto dataTables_wrapper no-footer" id="myTable_wrapper">
               <!-- Aquí se mostrará la tabla -->
               <div class="w-full overflow-hidden rounded-lg shadow-xs">
@@ -598,182 +602,197 @@ table.dataTable.no-footer {
       
           <script>
             // Supongamos que data_json_str es la cadena JSON que obtienes desde el servidor
-            var data_json_str = {{ data_json | safe }};
-    
-            try {
-                // Intenta analizar la cadena JSON
-                var data_json = JSON.parse(data_json_str);
-                console.log(data_json);
-    
-                var table = $('#myTable');
-    
-                // Agregar las cabeceras de columna basadas en las claves del objeto "columns"
-                var columns = data_json.columns;
-                for (var i = 0; i < columns.length; i++) {
-                    table.find('thead tr').append('<th>' + columns[i] + '</th>');
-                }
-    
-                // Agregar filas y celdas basadas en los datos JSON
-                var rows = data_json.index;
-                for (var i = 0; i < rows.length; i++) {
-                    var rowData = data_json.data[rows[i]];
-                    var rowHtml = '<tr>';
-    
-                    for (var key in rowData) {
-                        if (rowData.hasOwnProperty(key)) {
-                            rowHtml += '<td>' + rowData[key] + '</td>';
-                        }
-                    }
-    
-                    rowHtml += '</tr>';
-                    table.find('tbody').append(rowHtml);
-                }
-    
-                // Inicializar la tabla DataTable
-                var dataTable = table.DataTable({
-                    select: true  // Habilita la selección de filas
-                });
-    
-                // Agregar el controlador de eventos para el doble clic en una fila
-                table.on('dblclick', 'tr', function () {
-                    var data = dataTable.row(this).data(); // Obtén los datos de la fila
-    
-                    // Convierte los datos en JSON
-                    var dataJSON = JSON.stringify(data);
-    
-                    // Redirige a la otra página y pasa los datos en la URL como parámetro
-                    window.location.href = '/destino?data=' + encodeURIComponent(dataJSON);
-                });
-    
-            } catch (error) {
-                console.error("Error al analizar la cadena JSON:", error);
+            // Supongamos que data_json_str es la cadena JSON que obtienes desde el servidor
+var data_json_str = {{ data_json | safe }};
+
+try {
+    // Intenta analizar la cadena JSON
+    var data_json = JSON.parse(data_json_str);
+    console.log(data_json);
+
+    var table = $('#myTable');
+
+    // Agregar las cabeceras de columna basadas en las claves del objeto "columns"
+    var columns = data_json.columns;
+    for (var i = 0; i < columns.length; i++) {
+        table.find('thead tr').append('<th>' + columns[i] + '</th>');
+    }
+
+    // Agregar filas y celdas basadas en los datos JSON
+    var rows = data_json.index;
+    for (var i = 0; i < rows.length; i++) {
+        var rowData = data_json.data[rows[i]];
+        var rowHtml = '<tr>';
+
+        for (var key in rowData) {
+            if (rowData.hasOwnProperty(key)) {
+                rowHtml += '<td>' + rowData[key] + '</td>';
             }
+        }
+
+        rowHtml += '</tr>';
+        table.find('tbody').append(rowHtml);
+    }
+
+    // Inicializar la tabla DataTable
+    var dataTable = table.DataTable({
+        select: true  // Habilita la selección de filas
+    });
+
+    // Agregar el controlador de eventos para el doble clic en una fila
+    table.on('dblclick', 'tr', function () {
+    var data = dataTable.row(this).data(); // Obtén los datos de la fila
+
+    // Agregar la fila seleccionada al conjunto completo de datos
+    var combinedData = {
+        selectedRow: data,
+        allData: data_json
+    };
+
+    // Realiza una solicitud POST al servidor para enviar los datos combinados
+    $.ajax({
+    url: '/admin/destino',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(combinedData),
+    success: function(response) {
+        // Imprime la respuesta para verificar si se recibe correctamente
+        console.log(response);
+
+        // Redirige directamente a la función destino después de completar la solicitud
+        window.location.href = '/admin/destino';
+    },
+    error: function(error) {
+        console.error("Error al enviar datos por POST:", error);
+    }
+});
+});
+
+
+} catch (error) {
+    console.error("Error al analizar la cadena JSON:", error);
+}
+
         </script>
+        
               <!-- Card -->
               
 <br>
 
 
+<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+  Mapa de Calor
+</h2>
+<div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+  <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
+    Mapa de Calor de Anomalías en Departamentos
+  </h4>
 
-<div
-                class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-              >
-                <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                  Mapa de Calor de Anomalías en Departamentos
-                </h4>
+  <div class="flex">
+    <div id="table-container" style="margin-right: 9.5rem;" class="table dataTable no-footer">
+      <!-- La tabla generada por JavaScript se insertará aquí -->
+    </div>
 
-                <div class="flex">
-                
-            <div id="table-container"  style="margin-right: 9.5rem;" class="table dataTable no-footer">
-              <!-- La tabla generada por JavaScript se insertará aquí -->
-          </div>
-          
-            <script>
-              // Obtener el JSON de los datos (asegúrate de que esto esté definido en tu HTML)
-              var  data_json_str= {{ data_json | safe }};
-              var dataJSON = JSON.parse(data_json_str);
-              // Verificar si dataJSON está definido y tiene datos
-              var anomaliasPorDepartamento = {};
+    <script>
+      var data_json_str = {{ data_json | safe }};
+      var dataJSON = JSON.parse(data_json_str);
+      var anomaliasPorDepartamento = {};
 
-// Iterar a través de tus datos y contar anomalías
-dataJSON.data.forEach(function (row) {
-  var departamento = row[dataJSON.columns.indexOf('DEPARTAMENTO')];
-  var anomalia = row[dataJSON.columns.indexOf('anomalia_etiqueta')];
+      dataJSON.data.forEach(function (row) {
+        var departamento = row[dataJSON.columns.indexOf('DEPARTAMENTO')];
+        var anomalia = row[dataJSON.columns.indexOf('anomalia_etiqueta')];
 
-  if (anomaliasPorDepartamento[departamento] === undefined) {
-    anomaliasPorDepartamento[departamento] = 0;
-  }
+        if (anomaliasPorDepartamento[departamento] === undefined) {
+          anomaliasPorDepartamento[departamento] = 0;
+        }
 
-  if (anomalia === 1) {
-    anomaliasPorDepartamento[departamento]++;
-  }
-});
+        if (anomalia === 1) {
+          anomaliasPorDepartamento[departamento]++;
+        }
+      });
 
-// Crear una tabla
-var table = document.createElement('table');
+      var table = document.createElement('table');
+      var thead = document.createElement('thead');
+      var headerRow = thead.insertRow(0);
+      headerRow.insertCell(0).textContent = 'DEPARTAMENTO';
+      headerRow.insertCell(1).textContent = 'Anomalias';
+      table.appendChild(thead);
 
-// Crear el encabezado de la tabla
-var thead = document.createElement('thead');
-var headerRow = thead.insertRow(0);
-headerRow.insertCell(0).textContent = 'DEPARTAMENTO';
-headerRow.insertCell(1).textContent = 'Anomalias';
-table.appendChild(thead);
+      var tbody = document.createElement('tbody');
+      for (var departamento in anomaliasPorDepartamento) {
+        if (anomaliasPorDepartamento.hasOwnProperty(departamento)) {
+          var newRow = tbody.insertRow();
+          newRow.insertCell(0).textContent = departamento;
+          newRow.insertCell(1).textContent = anomaliasPorDepartamento[departamento];
+        }
+      }
 
-// Crear el cuerpo de la tabla con los departamentos y el recuento de anomalías
-var tbody = document.createElement('tbody');
-for (var departamento in anomaliasPorDepartamento) {
-  if (anomaliasPorDepartamento.hasOwnProperty(departamento)) {
-    var newRow = tbody.insertRow();
-    newRow.insertCell(0).textContent = departamento;
-    newRow.insertCell(1).textContent = anomaliasPorDepartamento[departamento];
-  }
-}
+      table.appendChild(tbody);
 
-table.appendChild(tbody);
+      var container = document.getElementById('table-container');
+      container.appendChild(table);
+    </script>
 
-// Agregar la tabla a tu página HTML (reemplaza 'table-container' con el ID deseado)
-var container = document.getElementById('table-container');
-container.appendChild(table);
-</script>
+    <div id="heatmap_div" style="height: 500px;"></div>
+
+    <script type="text/javascript">
+      var data_json_str = {{ data_json | safe }};
+      var dataJSON = JSON.parse(data_json_str);
+      var recuentoAnomaliasPorDepartamento = {};
+
+      dataJSON.data.forEach(function (row) {
+        var departamento = row[dataJSON.columns.indexOf('DEPARTAMENTO')];
+        var anomalia = row[dataJSON.columns.indexOf('anomalia_etiqueta')];
+
+        if (recuentoAnomaliasPorDepartamento[departamento] === undefined) {
+          recuentoAnomaliasPorDepartamento[departamento] = 0;
+        }
+
+        if (anomalia === 1) {
+          recuentoAnomaliasPorDepartamento[departamento]++;
+        }
+      });
+
+      var datosDepartamento = [];
+
+      for (var departamento in recuentoAnomaliasPorDepartamento) {
+        if (recuentoAnomaliasPorDepartamento.hasOwnProperty(departamento)) {
+          datosDepartamento.push([departamento, recuentoAnomaliasPorDepartamento[departamento]]);
+        }
+      }
+
+      // Asegurémonos de que 'CUSCO' se encuentre dentro de los datos de departamentos
+      if (!recuentoAnomaliasPorDepartamento['CUSCO']) {
+        recuentoAnomaliasPorDepartamento['CUSCO'] = 0;
+      }
+
+      google.charts.load('current', { 'packages': ['geochart'] });
+      google.charts.setOnLoadCallback(drawHeatmap);
+
+      function drawHeatmap() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'DEPARTAMENTO');
+        data.addColumn('number', 'Anomalias');
+        data.addRows(datosDepartamento);
+
+        var options = {
+          title: 'Mapa de Calor de Anomalías por Departamento',
+          width: 600,
+          height: 400,
+          region: 'PE',
+          displayMode: 'regions',
+          resolution: 'provinces'
+        };
+
+        var chart = new google.visualization.GeoChart(document.getElementById('heatmap_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </div>
+</div>
 
 
-<div id="heatmap_div" style="height: 500px;"></div>
-
-<script type="text/javascript">
-
-var data_json_str = {{ data_json | safe }};
-var dataJSON = JSON.parse(data_json_str);
-
-// Inicializar un objeto para almacenar el recuento de anomalías por departamento
-var recuentoAnomaliasPorDepartamento = {};
-
-// Recorrer tus datos para calcular el recuento de anomalías por departamento
-dataJSON.data.forEach(function (row) {
-  var departamento = row[dataJSON.columns.indexOf('DEPARTAMENTO')];
-  var anomalia = row[dataJSON.columns.indexOf('anomalia_etiqueta')];
-
-  if (recuentoAnomaliasPorDepartamento[departamento] === undefined) {
-    recuentoAnomaliasPorDepartamento[departamento] = 0;
-  }
-
-  if (anomalia === 1) {
-    recuentoAnomaliasPorDepartamento[departamento]++;
-  }
-});
-
-// Crear una matriz en el formato adecuado para el mapa de calor
-var datosDepartamento = [];
-
-for (var departamento in recuentoAnomaliasPorDepartamento) {
-  if (recuentoAnomaliasPorDepartamento.hasOwnProperty(departamento)) {
-    datosDepartamento.push([departamento, recuentoAnomaliasPorDepartamento[departamento]]);
-  }
-}
-google.charts.load('current', { 'packages': ['geochart'] });
-google.charts.setOnLoadCallback(drawHeatmap);
-
-    function drawHeatmap() {
-  var data = new google.visualization.DataTable();
-  data.addColumn('string', 'DEPARTAMENTO');
-  data.addColumn('number', 'Anomalias');
-
-  data.addRows(datosDepartamento);
-
-  var options = {
-    title: 'Mapa de Calor de Anomalías por Departamento',
-    width: 600,
-    height: 400,
-    region: 'PE', // Código de país para Perú
-    displayMode: 'regions',
-    resolution: 'provinces'
-  };
-
-  var chart = new google.visualization.GeoChart(document.getElementById('heatmap_div'));
-  chart.draw(data, options);
-}
-</script></div>
-                
-              </div>
+              
 
 
 
@@ -784,146 +803,159 @@ google.charts.setOnLoadCallback(drawHeatmap);
             <h2
               class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
             >
-              Charts
+              Informes Graficos
             </h2>
             <div class="grid gap-6 mb-8 md:grid-cols-2">
               <div
                 class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
               >
                 <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                  Revenue
+                  5 Primeras Marcas con mas anomalias
                 </h4>
-                <canvas id="pie"></canvas>
+                
                 <div
                   class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400"
                 >
-                  <!-- Chart legend -->
-                  <div class="flex items-center">
-                    <span
-                      class="inline-block w-3 h-3 mr-1 bg-blue-500 rounded-full"
-                    ></span>
-                    <span>Shirts</span>
+                  <!-- Agrega un elemento canvas para el gráfico -->
+                  <div style="width: 350px; height: 350px;">
+                    <canvas id="anomaliasPorMarcaChart"></canvas>
                   </div>
-                  <div class="flex items-center">
-                    <span
-                      class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"
-                    ></span>
-                    <span>Shoes</span>
-                  </div>
-                  <div class="flex items-center">
-                    <span
-                      class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"
-                    ></span>
-                    <span>Bags</span>
-                  </div>
+
+<script>
+  // Obtener el JSON de los datos (asegúrate de que esto esté definido en tu HTML)
+  var data_json_str = {{ data_json | safe }};
+  var datosJSON = JSON.parse(data_json_str);
+
+  // Crear un objeto para almacenar los conteos de anomalías por marca
+  var anomaliasPorMarca = {};
+
+  // Iterar a través de tus datos y contar anomalías basadas en 'Marca'
+  datosJSON.data.forEach(function (row) {
+    var marca = row[datosJSON.columns.indexOf('MARCA')];
+    var anomaliaEtiqueta = row[datosJSON.columns.indexOf('anomalia_etiqueta')];
+
+    // Verificar si la marca está definida en anomaliasPorMarca
+    if (!anomaliasPorMarca[marca]) {
+      anomaliasPorMarca[marca] = 0;
+    }
+
+    // Contar la anomalía si es 1
+    if (anomaliaEtiqueta === 1) {
+      anomaliasPorMarca[marca]++;
+    }
+  });
+
+  // Filtrar las 5 primeras marcas con más anomalías
+  var marcasConAnomalias = Object.keys(anomaliasPorMarca).filter(function(marca) {
+    return anomaliasPorMarca[marca] > 0;
+  }).sort(function(a, b) {
+    return anomaliasPorMarca[b] - anomaliasPorMarca[a];
+  }).slice(0, 5); // Filtrar las primeras 5 marcas
+
+  // Obtener los datos y etiquetas correspondientes
+  var datosFiltrados = marcasConAnomalias.map(function(marca) {
+    return anomaliasPorMarca[marca];
+  });
+  var etiquetasFiltradas = marcasConAnomalias;
+
+  // Define colores para el gráfico
+  var colores = [
+    'rgba(255, 99, 132, 0.6)',
+    'rgba(54, 162, 235, 0.6)',
+    'rgba(255, 206, 86, 0.6)',
+    'rgba(75, 192, 192, 0.6)',
+    'rgba(153, 102, 255, 0.6)',
+    // Agrega más colores aquí
+  ];
+
+  // Obtener el contexto del canvas
+  var ctx = document.getElementById("anomaliasPorMarcaChart").getContext("2d");
+
+  // Crear el gráfico circular
+  var chart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: etiquetasFiltradas, // Marcas como etiquetas
+      datasets: [
+        {
+          data: datosFiltrados, // Datos de conteo
+          backgroundColor: colores
+        }
+      ]
+    }
+  });
+</script>
+
+
                 </div>
               </div>
 
               
-              <div
-                class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-              >
-                <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                  Traffic
-                </h4>
-                <canvas id="line"></canvas>
-                <div
-                  class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400"
-                >
-                  <!-- Chart legend -->
-                  <div class="flex items-center">
-                    <span
-                      class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"
-                    ></span>
-                    <span>Organic</span>
-                  </div>
-                  <div class="flex items-center">
-                    <span
-                      class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"
-                    ></span>
-                    <span>Paid</span>
-                  </div>
-                </div>
-              </div>
 
+              
+              
 
               <div
                 class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
               >
                 <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-                  Revenue
+                  Estado Orden
                 </h4>
-                <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+                
                 <div
                   class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400"
                 >
                   <!-- Chart legend -->
-                  <div class="flex items-center">
-                    <span
-                      class="inline-block w-3 h-3 mr-1 bg-blue-500 rounded-full"
-                    ></span>
-                    <span>Shirts</span>
-                  </div>
-                  <div class="flex items-center">
-                    <span
-                      class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"
-                    ></span>
-                    <span>Shoes</span>
-                  </div>
-                  <div class="flex items-center">
-                    <span
-                      class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"
-                    ></span>
-                    <span>Bags</span>
-                  </div>
+                  <div id="piechart" style="height: 400px;"></div>
                 </div>
               </div>
 
-              <div id="anomalias-table"></div>
+             
+              
 
               <script>
                 // Obtener el JSON de los datos (asegúrate de que esto esté definido en tu HTML)
-var data_json_str = {{ data_json | safe }};
-var datosJSON = JSON.parse(data_json_str);
+                var data_json_str = {{ data_json | safe }};
+                var datosJSON = JSON.parse(data_json_str);
 
-// Verificar si datosJSON está definido y tiene datos
-var anomaliasPorEstado = {};
+                // Verificar si datosJSON está definido y tiene datos
+                var anomaliasPorEstado = {};
 
-// Iterar a través de tus datos y contar anomalías basadas en 'ESTADO_ORDEN'
-datosJSON.data.forEach(function (row) {
-  var estadoOrden = row[datosJSON.columns.indexOf('ESTADO_ORDEN')];
-  var anomaliaEtiqueta = row[datosJSON.columns.indexOf('anomalia_etiqueta')];
+                // Iterar a través de tus datos y contar anomalías basadas en 'ESTADO_ORDEN'
+                datosJSON.data.forEach(function (row) {
+                  var estadoOrden = row[datosJSON.columns.indexOf('ESTADO_ORDEN')];
+                  var anomaliaEtiqueta = row[datosJSON.columns.indexOf('anomalia_etiqueta')];
 
-  // Verificar si el estado de orden está definido en anomaliasPorEstado
-  if (!anomaliasPorEstado[estadoOrden]) {
-    anomaliasPorEstado[estadoOrden] = 0;
-  }
+                  // Verificar si el estado de orden está definido en anomaliasPorEstado
+                  if (!anomaliasPorEstado[estadoOrden]) {
+                    anomaliasPorEstado[estadoOrden] = 0;
+                  }
 
-  // Contar la anomalía si es 1
-  if (anomaliaEtiqueta === 1) {
-    anomaliasPorEstado[estadoOrden]++;
-  }
-});
+                  // Contar la anomalía si es 1
+                  if (anomaliaEtiqueta === 1) {
+                    anomaliasPorEstado[estadoOrden]++;
+                  }
+                });
 
-// Crear una tabla HTML con los resultados
-var tableHTML = '<table class="table">';
-tableHTML += '<thead><tr><th>Estado Orden</th><th>Contador</th></tr></thead>';
-tableHTML += '<tbody>';
+                // Crear una tabla HTML con los resultados
+                var tableHTML = '<table class="table">';
+                tableHTML += '<thead><tr><th>Estado Orden</th><th>Contador</th></tr></thead>';
+                tableHTML += '<tbody>';
 
-// Iterar sobre los resultados y agregar filas a la tabla
-for (var estado in anomaliasPorEstado) {
-  if (anomaliasPorEstado.hasOwnProperty(estado)) {
-    tableHTML += `<tr><td>${estado}</td><td>${anomaliasPorEstado[estado]}</td></tr>`;
-    xValues.push(estado);
-    yValues.push(anomaliasPorEstado[estado]);
-  }
-}
+                // Iterar sobre los resultados y agregar filas a la tabla
+                for (var estado in anomaliasPorEstado) {
+                  if (anomaliasPorEstado.hasOwnProperty(estado)) {
+                    tableHTML += `<tr><td>${estado}</td><td>${anomaliasPorEstado[estado]}</td></tr>`;
+                    xValues.push(estado);
+                    yValues.push(anomaliasPorEstado[estado]);
+                  }
+                }
 
-tableHTML += '</tbody></table>';
+                tableHTML += '</tbody></table>';
 
-// Mostrar la tabla en el contenedor especificado
-var tableContainer = document.getElementById('anomalias-table');
-tableContainer.innerHTML = tableHTML;
+                // Mostrar la tabla en el contenedor especificado
+                var tableContainer = document.getElementById('anomalias-table');
+                tableContainer.innerHTML = tableHTML;
 
 
 
@@ -931,7 +963,215 @@ tableContainer.innerHTML = tableHTML;
 
 
 
+<div style="width: 1200px; display: flex; flex-direction: column;">
+  <div style="margin-bottom: 20px;">
+    <div style="width: 1200px; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);" class="dark:bg-gray-800">
+      <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">Anomalias por Proveedores</h4>
+      <div class="flex justify-center mt-4 text-sm text-gray-600 dark:text-gray-400">
+        <!-- Primer gráfico de barras -->
+        <canvas id="anomaliasPorProveedorChart" width="1100" height="600"></canvas>
+      </div>
+    </div>
+  </div>
 
+  <div style="width: 1200px; padding: 20px; background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);" class="dark:bg-gray-800">
+    <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">Anomalias por Entidades</h4>
+    <div class="flex justify-center mt-4 text-sm text-gray-600 dark:text-gray-400">
+      <!-- Segundo gráfico de barras -->
+      <canvas id="anomaliasPorEntidadHorizontalChart" width="1100" height="600"></canvas>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<script>
+  // Obtener el JSON de los datos (asegúrate de que esto esté definido en tu HTML)
+  var data_json_str = {{ data_json | safe }};
+  var datosJSON = JSON.parse(data_json_str);
+
+  // Crear un objeto para almacenar los conteos de anomalías por proveedor
+  var anomaliasPorProveedor = {};
+
+  // Iterar a través de tus datos y contar anomalías basadas en 'Proveedor'
+  datosJSON.data.forEach(function (row) {
+    var proveedor = row[datosJSON.columns.indexOf('PROVEEDOR')];
+    var anomaliaEtiqueta = row[datosJSON.columns.indexOf('anomalia_etiqueta')];
+
+    // Verificar si el proveedor está definido en anomaliasPorProveedor
+    if (!anomaliasPorProveedor[proveedor]) {
+      anomaliasPorProveedor[proveedor] = 0;
+    }
+
+    // Contar la anomalía si es 1
+    if (anomaliaEtiqueta === 1) {
+      anomaliasPorProveedor[proveedor]++;
+    }
+  });
+
+  var proveedoresConMasDeUnaAnomalia = Object.keys(anomaliasPorProveedor).filter(function(proveedor) {
+    return anomaliasPorProveedor[proveedor] > 1; // Cambiado a > 1 para mostrar solo los proveedores con más de una anomalía
+  });
+
+  // Obtener los datos y etiquetas correspondientes de proveedores con más de una anomalía
+  var datosFiltrados = proveedoresConMasDeUnaAnomalia.map(function(proveedor) {
+    return anomaliasPorProveedor[proveedor];
+  });
+  var etiquetasFiltradas = proveedoresConMasDeUnaAnomalia;
+
+  // Obtener el contexto del canvas y crear el gráfico de barras horizontal
+  var ctx = document.getElementById("anomaliasPorProveedorChart").getContext("2d");
+  var chart = new Chart(ctx, {
+    type: "horizontalBar",
+    data: {
+      labels: etiquetasFiltradas, // Proveedores con más de una anomalía como etiquetas
+      datasets: [
+        {
+          label: "Anomalías por Proveedor",
+          data: datosFiltrados, // Datos de conteo para proveedores con más de una anomalía
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      scales: {
+        x: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+
+
+
+
+
+
+
+
+<script>
+  // Obtener el JSON de los datos (asegúrate de que esto esté definido en tu HTML)
+  var data_json_str = {{ data_json | safe }};
+  var datosJSON = JSON.parse(data_json_str);
+
+  // Crear un objeto para almacenar los conteos de anomalías por entidad
+  var anomaliasPorEntidad = {};
+
+  // Iterar a través de tus datos y contar anomalías basadas en 'Entidad'
+  datosJSON.data.forEach(function (row) {
+    var entidad = row[datosJSON.columns.indexOf('ENTIDAD')];
+    var anomaliaEtiqueta = row[datosJSON.columns.indexOf('anomalia_etiqueta')];
+
+    // Verificar si la entidad está definida en anomaliasPorEntidad
+    if (!anomaliasPorEntidad[entidad]) {
+      anomaliasPorEntidad[entidad] = 0;
+    }
+
+    // Contar la anomalía si es 1
+    if (anomaliaEtiqueta === 1) {
+      anomaliasPorEntidad[entidad]++;
+    }
+  });
+
+  // Filtrar entidades con un valor mayor a 0
+  var entidadesConAnomalias = Object.keys(anomaliasPorEntidad).filter(function(entidad) {
+    return anomaliasPorEntidad[entidad] > 1;
+  });
+
+  // Obtener los datos y etiquetas correspondientes
+  var datosFiltrados = entidadesConAnomalias.map(function(entidad) {
+    return anomaliasPorEntidad[entidad];
+  });
+  var etiquetasFiltradas = entidadesConAnomalias;
+
+  // Obtener el contexto del canvas
+  var ctx2 = document.getElementById("anomaliasPorEntidadHorizontalChart").getContext("2d");
+
+  // Crear el gráfico de barras horizontal para las entidades
+  var chart2 = new Chart(ctx2, {
+    type: "horizontalBar", // Cambiado a tipo horizontalBar
+    data: {
+      labels: etiquetasFiltradas, // Entidades como etiquetas
+      datasets: [
+        {
+          label: "Anomalías por Entidad",
+          data: datosFiltrados, // Datos de conteo
+          backgroundColor: "rgba(75, 192, 192, 0.2)", // Color de las barras
+          borderColor: "rgba(75, 192, 192, 1)",
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      indexAxis: 'y', // Establecer el eje horizontal
+      scales: {
+        x: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+  var data_json_str = {{ data_json | safe }};
+  var dataJSON = JSON.parse(data_json_str);
+
+  // Inicializar un objeto para almacenar el recuento de anomalías por estado de orden
+  var recuentoAnomaliasPorEstado = {};
+
+  // Recorrer tus datos para calcular el recuento de anomalías por estado de orden
+  dataJSON.data.forEach(function (row) {
+    var estadoOrden = row[dataJSON.columns.indexOf('ESTADO_ORDEN')];
+    var anomalia = row[dataJSON.columns.indexOf('anomalia_etiqueta')];
+
+    if (recuentoAnomaliasPorEstado[estadoOrden] === undefined) {
+      recuentoAnomaliasPorEstado[estadoOrden] = 0;
+    }
+
+    if (anomalia === 1) {
+      recuentoAnomaliasPorEstado[estadoOrden]++;
+    }
+  });
+
+  // Crear una matriz en el formato adecuado para el Pie Chart
+  var datosEstado = [['Estado de Orden', 'Recuento de Anomalías']];
+  for (var estado in recuentoAnomaliasPorEstado) {
+    if (recuentoAnomaliasPorEstado.hasOwnProperty(estado)) {
+      datosEstado.push([estado, recuentoAnomaliasPorEstado[estado]]);
+    }
+  }
+
+  google.charts.load('current', { 'packages': ['corechart'] });
+  google.charts.setOnLoadCallback(drawPieChart);
+
+  function drawPieChart() {
+    var data = google.visualization.arrayToDataTable(datosEstado);
+
+    var options = {
+      title: 'Recuento de Anomalías por Estado de Orden',
+      width: 600,
+      height: 400,
+    };
+
+    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+    chart.draw(data, options);
+  }
+</script>
 
 
 
