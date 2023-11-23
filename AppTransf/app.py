@@ -384,7 +384,7 @@ def admin_ResultadosAnalisis():
 
 
 # IA UNIDAD2 - VERSION 2.0
-
+'''
 def find_price_column(data):
     possible_price_columns = ["precio_unitario", "precio_unidad", "precio", "precio c/u"]
 
@@ -454,6 +454,112 @@ def admin_ResultadosAnalisis():
             return jsonify({'error': 'No se encontraron columnas relacionadas a CATEGORIA, MARCA y PRECIO'})
     else:
         return jsonify({'error': 'No se ha cargado ningún archivo'})
+'''
+
+
+
+# IA UNIDAD3 - VERSION 3.0
+
+
+def find_price_column(data):
+    possible_price_columns = ["precio_unitario", "precio_unidad", "precio", "precio c/u"]
+
+    for column in data.columns:
+        if any(keyword in column.lower() for keyword in possible_price_columns):
+            return column
+
+    return None
+
+def find_brand_column(data):
+    possible_brand_columns = ["marca", "fabricante", "proveedor"]  # Agrega otras palabras clave según tus datos
+
+    for column in data.columns:
+        if any(keyword in column.lower() for keyword in possible_brand_columns):
+            return column
+
+    return None
+
+def find_category_column(data):
+    possible_category_columns = ["categoria", "tipo", "clase"]  # Agrega otras palabras clave según tus datos
+
+    for column in data.columns:
+        if any(keyword in column.lower() for keyword in possible_category_columns):
+            return column
+
+    return None
+def find_name_column(data):
+    possible_name_columns = ["nombre", "producto"]  # Agrega otras palabras clave según tus datos
+
+    for column in data.columns:
+        if any(keyword in column.lower() for keyword in possible_name_columns):
+            return column
+
+    return None
+
+@app.route("/admin/ResultadosAnalisis")
+def admin_ResultadosAnalisis():
+    uploaded_filename = session.get('uploaded_filename')
+    if uploaded_filename is not None:
+        if uploaded_filename.endswith(('.csv', '.xls', '.xlsx')):
+            data = pd.read_csv(uploaded_filename) if uploaded_filename.endswith('.csv') else pd.read_excel(uploaded_filename)
+        else:
+            return jsonify({'error': 'Formato de archivo no admitido. Cargue un archivo CSV o Excel.'})
+
+        data.columns = [col.lower() for col in data.columns]  # Convertir a minúsculas
+        categorias_column = find_category_column(data)
+        marcas_column = find_brand_column(data)
+        precio_unitario_column = find_price_column(data)
+        nombre_column = find_name_column(data)  # Nueva columna "Nombre"
+
+        if categorias_column and marcas_column and precio_unitario_column and nombre_column:
+            encoder = OneHotEncoder(sparse=False, drop='first', handle_unknown='ignore')
+            X_encoded = encoder.fit_transform(data[[categorias_column, marcas_column, nombre_column]])  # Agregar "Nombre" aquí
+
+            X_numeric = data[precio_unitario_column].values
+            X_final = np.column_stack((X_encoded, X_numeric))
+
+            # Calcula umbrales separados para cada categoría, marca y nombre
+            unique_categories = data[categorias_column].unique()
+            unique_brands = data[marcas_column].unique()
+            unique_names = data[nombre_column].unique()
+            
+            thresholds = {}
+
+            for category in unique_categories:
+                for brand in unique_brands:
+                    for name in unique_names:
+                        subset = data[(data[categorias_column] == category) & (data[marcas_column] == brand) & (data[nombre_column] == name)]  # Modificar aquí
+                        mean = subset[precio_unitario_column].mean()
+                        std = subset[precio_unitario_column].std()
+                        upper_threshold = mean + 2 * std
+                        lower_threshold = mean - 2 * std
+                        thresholds[(category, brand, name)] = (upper_threshold, lower_threshold)
+
+            data['anomalia_etiqueta'] = [1 if (row[precio_unitario_column] > thresholds[(row[categorias_column], row[marcas_column], row[nombre_column])][0] or row[precio_unitario_column] < thresholds[(row[categorias_column], row[marcas_column], row[nombre_column])][1]) else 0 for _, row in data.iterrows()]
+
+            X = X_final
+            y = data['anomalia_etiqueta'].values
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+            model = LogisticRegression()
+            model.fit(X_train, y_train)
+
+            y_pred = model.predict(X_test)
+
+            indices_anomalías = [i for i, anomalía in enumerate(y_pred) if anomalía == 1]
+
+            anomalías = data.iloc[indices_anomalías]
+
+            data.columns = [col.upper() if col != 'anomalia_etiqueta' else col for col in data.columns]  # Convertir a mayúsculas
+
+            data_json = data.to_json(orient='split')
+
+            return render_template("admin/charts.html", filename=uploaded_filename, data_json=json.dumps(data_json), anomalies=anomalías)
+        else:
+            return jsonify({'error': 'No se encontraron columnas relacionadas a CATEGORIA, MARCA, NOMBRE y PRECIO'})
+    else:
+        return jsonify({'error': 'No se ha cargado ningún archivo'})
+
 
 
 
