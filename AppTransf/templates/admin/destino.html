@@ -506,19 +506,46 @@ table.dataTable.no-footer {
             <h2
               class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200"
             >
-              Dashboard
+              Datos Seleccionados:
             </h2>
             
-            <!-- Cards -->
+            <div id="dataCards">
+              <!-- Aquí se agregarán las tarjetas de datos dinámicamente con JavaScript -->
+          </div>
+          
+          <script>
+              // Supongamos que selected_row y all_data son los objetos JSON que obtienes desde el servidor
+              var selectedRow = {{ selected_row | safe }};
+              var dataCardsDiv = document.getElementById('dataCards');
+          
+              // Supongamos que titles es la lista de títulos que quieres mostrar
+              var titles = [
+                  "ORDEN_COMPRA", "CATALOGO", "TIPO_COMPRA", "RUC_ENTIDAD", "ENTIDAD",
+                  "RUC_PROVEEDOR", "PROVEEDOR", "FECHA_COMPRA", "ESTADO_ORDEN",
+                  "DEPARTAMENTO", "PROVINCIA", "DISTRITO", "NOMBRE", "MARCA",
+                  "PRECIO_UNITARIO", "PRECIO_TOTAL", "anomalia_etiqueta"
+              ];
+          
+              // Crear tarjetas de datos dinámicamente
+              for (var i = 0; i < selectedRow.length; i++) {
+                  var card = document.createElement('div');
+                  card.className = 'data-card';
+                  card.innerHTML = '<strong>' + titles[i] + ':</strong> ' + selectedRow[i];
+                  dataCardsDiv.appendChild(card);
+              }
+          </script>
+            <BR>
+
+
             
 
             <!-- New Table -->
             <h4
               class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300"
             >
-              Table with actions
+              PREDICION
             </h4>
-
+            <p>Predicción: {{ prediction }}</p>
             <style>
                 #myTable2 th,
                 #myTable2 td {

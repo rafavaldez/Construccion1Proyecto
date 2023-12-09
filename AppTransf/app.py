@@ -384,7 +384,7 @@ def admin_ResultadosAnalisis():
 
 
 # IA UNIDAD2 - VERSION 2.0
-'''
+
 def find_price_column(data):
     possible_price_columns = ["precio_unitario", "precio_unidad", "precio", "precio c/u"]
 
@@ -404,7 +404,7 @@ def admin_ResultadosAnalisis():
             return jsonify({'error': 'Formato de archivo no admitido. Cargue un archivo CSV o Excel.'})
 
         data.columns = [col.lower() for col in data.columns]  # Convertir a minúsculas
-        categorias_column = next((col for col in data.columns if 'categoria' in col), None)
+        categorias_column = next((col for col in data.columns if 'nombre' in col), None)
         marcas_column = next((col for col in data.columns if 'marca' in col), None)
         precio_unitario_column = find_price_column(data)
 
@@ -454,10 +454,21 @@ def admin_ResultadosAnalisis():
             return jsonify({'error': 'No se encontraron columnas relacionadas a CATEGORIA, MARCA y PRECIO'})
     else:
         return jsonify({'error': 'No se ha cargado ningún archivo'})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 '''
-
-
-
 # IA UNIDAD3 - VERSION 3.0
 
 
@@ -559,14 +570,18 @@ def admin_ResultadosAnalisis():
             return jsonify({'error': 'No se encontraron columnas relacionadas a CATEGORIA, MARCA, NOMBRE y PRECIO'})
     else:
         return jsonify({'error': 'No se ha cargado ningún archivo'})
+'''
 
 
 
-
-
+import joblib
 from flask import Flask, render_template, redirect, url_for, request
 
 
+model_filename = 'AppTransf/static/modelo/linear_regression_model.joblib'
+encoder_filename = 'AppTransf/static/modelo/one_hot_encoder.joblib'
+model = joblib.load(model_filename)
+encoder = joblib.load(encoder_filename)
 
 # Aquí está tu vista original
 @app.route('/admin/destino', methods=['POST'])
@@ -583,17 +598,51 @@ def destino():
     session['selected_row'] = selected_row
     session['all_data'] = all_data
 
+
+    
+
+    
+
     return "Datos almacenados en la sesión"
 
-# Vista corregida, sin el argumento 'name'
-@app.route('/admin/destino', methods=['GET'])  # Cambiado a 'GET' para que pueda ser accesible directamente
+
+
+
+
+from datetime import datetime
+
+@app.route('/admin/destino', methods=['GET'])  
 def admin_destino():
     # Recupera los datos almacenados en la sesión
     selected_row = session.pop('selected_row', {})
     all_data = session.pop('all_data', {})
 
+    marca_index = 13  # Ajusta el índice según la posición real de 'marca' en tu lista
+    nombre_index = 12  # Ajusta el índice según la posición real de 'nombre' en tu lista
+    fecha_compra_index = 7  # Ajusta el índice según la posición real de 'fecha_compra' en tu lista
+    precio_unitario_index = 14  # Ajusta el índice según la posición real de 'precio_unitario' en tu lista
+
+    # Obtén los valores directamente de selected_row
+    marca = selected_row[marca_index] if len(selected_row) > marca_index else ''
+    nombre = selected_row[nombre_index] if len(selected_row) > nombre_index else ''
+    fecha_compra = selected_row[fecha_compra_index] if len(selected_row) > fecha_compra_index else ''
+
+    # Obtén el mes de compra a partir de la fecha de compra
+    fecha_compra_obj = datetime.strptime(fecha_compra, '%Y-%m-%d') if fecha_compra else None
+    mes_compra = fecha_compra_obj.month if fecha_compra_obj else None
+
+    # Convierte 'precio_unitario' a float
+    precio_unitario = float(selected_row[precio_unitario_index]) if len(selected_row) > precio_unitario_index else 0.0
+
+    # Codificar variables categóricas
+    encoded_features = encoder.transform([[marca, nombre, mes_compra]])
+
+    # Combinar características codificadas y precio unitario para realizar la predicción
+    X = np.column_stack((encoded_features, precio_unitario))
+    price_prediction = model.predict(X)
+
     # Tu lógica para renderizar la plantilla
-    return render_template('admin/destino.html', selected_row=selected_row, all_data=all_data)
+    return render_template('admin/destino.html', selected_row=selected_row, all_data=all_data, prediction=price_prediction[0])
 
 
 
