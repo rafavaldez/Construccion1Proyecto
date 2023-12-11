@@ -394,6 +394,9 @@ def find_price_column(data):
 
     return None
 
+
+
+'''
 @app.route("/admin/ResultadosAnalisis")
 def admin_ResultadosAnalisis():
     uploaded_filename = session.get('uploaded_filename')
@@ -454,9 +457,73 @@ def admin_ResultadosAnalisis():
             return jsonify({'error': 'No se encontraron columnas relacionadas a CATEGORIA, MARCA y PRECIO'})
     else:
         return jsonify({'error': 'No se ha cargado ningún archivo'})
+'''
+
+
+from sklearn.ensemble import IsolationForest
 
 
 
+@app.route("/admin/ResultadosAnalisis")
+def admin_ResultadosAnalisis():
+    uploaded_filename = session.get('uploaded_filename')
+    if uploaded_filename is not None:
+        if uploaded_filename.endswith(('.csv', '.xls', '.xlsx')):
+            data = pd.read_csv(uploaded_filename) if uploaded_filename.endswith('.csv') else pd.read_excel(uploaded_filename)
+        else:
+            return jsonify({'error': 'Formato de archivo no admitido. Cargue un archivo CSV o Excel.'})
+
+        data.columns = [col.lower() for col in data.columns]  # Convertir a minúsculas
+        categorias_column = next((col for col in data.columns if 'nombre' in col), None)
+        marcas_column = next((col for col in data.columns if 'marca' in col), None)
+        precio_unitario_column = find_price_column(data)
+
+        if categorias_column and marcas_column and precio_unitario_column:
+            encoder = OneHotEncoder(sparse=False, drop='first', handle_unknown='ignore')
+            X_encoded = encoder.fit_transform(data[[categorias_column, marcas_column]])
+
+            X_numeric = data[precio_unitario_column].values
+            X_final = np.column_stack((X_encoded, X_numeric))
+
+            # Calcula umbrales separados para cada categoría y marca
+            unique_categories = data[categorias_column].unique()
+            unique_brands = data[marcas_column].unique()
+            
+            thresholds = {}
+
+            for category in unique_categories:
+                for brand in unique_brands:
+                    subset = data[(data[categorias_column] == category) & (data[marcas_column] == brand)]
+                    mean = subset[precio_unitario_column].mean()
+                    std = subset[precio_unitario_column].std()
+                    upper_threshold = mean + 2 * std
+                    lower_threshold = mean - 2 * std
+                    thresholds[(category, brand)] = (upper_threshold, lower_threshold)
+
+            data['anomalia_etiqueta'] = [1 if (row[precio_unitario_column] > thresholds[(row[categorias_column], row[marcas_column])][0] or row[precio_unitario_column] < thresholds[(row[categorias_column], row[marcas_column])][1]) else 0 for _, row in data.iterrows()]
+
+            X = X_final
+            y = data['anomalia_etiqueta'].values
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+            model = IsolationForest(contamination=0.1, random_state=42)
+            model.fit(X_train)
+
+            y_pred = model.predict(X_test)
+
+            indices_anomalías = [i for i, anomalía in enumerate(y_pred) if anomalía == 1]
+
+            anomalías = data.iloc[indices_anomalías]
+
+            data.columns = [col.upper() if col != 'anomalia_etiqueta' else col for col in data.columns]  # Convertir a mayúsculas
+
+            data_json = data.to_json(orient='split')
+
+            return render_template("admin/charts.html", filename=uploaded_filename, data_json=json.dumps(data_json), anomalies=anomalías)
+        else:
+            return jsonify({'error': 'No se encontraron columnas relacionadas a CATEGORIA, MARCA y PRECIO'})
+    else:
+        return jsonify({'error': 'No se ha cargado ningún archivo'})
 
 
 
