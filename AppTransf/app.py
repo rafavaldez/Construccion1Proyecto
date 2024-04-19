@@ -51,6 +51,8 @@ db = client.bd_Transf  # Cambia 'bd_Transf' con el nombre de tu base de datos
 usuarios = db.usuarios
 documentos = db.documentos
 
+
+
 # Envía un ping para confirmar la conexión exitosa
 try:
     client.admin.command('ping')
@@ -72,6 +74,11 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_DIR'] = 'AppTransf/session_data'  # Ruta relativa a la carpeta 'AppTransf'.
 Session(app)
 
+
+
+
+
+
 #Authentication
 
 app.secret_key = "depressionapp"
@@ -86,9 +93,15 @@ flow = Flow.from_client_secrets_file(
     redirect_uri="https://5000-alxcript-depressionapp-1yj4bhu0xju.ws-us101.gitpod.io/callback"
     )
 
-import os
 
+# Configura la carpeta de carga
+import os
 UPLOAD_FOLDER = os.path.join(app.root_path,"static", "archivos_analisis")
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+
+
 
 @app.route("/api/usuarios2", methods=["POST"])
 def registrar_usuario2():
@@ -112,8 +125,7 @@ def registrar_usuario2():
 
     return jsonify({"mensaje": "Error al registrar usuario"}), 400
 
-# Configura la carpeta de carga
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -462,7 +474,7 @@ def admin_ResultadosAnalisis():
 
 from sklearn.ensemble import IsolationForest
 
-
+'''
 
 @app.route("/admin/ResultadosAnalisis")
 def admin_ResultadosAnalisis():
@@ -480,6 +492,9 @@ def admin_ResultadosAnalisis():
 
         if categorias_column and marcas_column and precio_unitario_column:
             encoder = OneHotEncoder(sparse=False, drop='first', handle_unknown='ignore')
+
+            
+
             X_encoded = encoder.fit_transform(data[[categorias_column, marcas_column]])
 
             X_numeric = data[precio_unitario_column].values
@@ -525,17 +540,17 @@ def admin_ResultadosAnalisis():
     else:
         return jsonify({'error': 'No se ha cargado ningún archivo'})
 
-
-
-
-
-
-
-
-
-
-
 '''
+
+
+
+
+
+
+
+
+
+
 # IA UNIDAD3 - VERSION 3.0
 
 
@@ -583,20 +598,19 @@ def admin_ResultadosAnalisis():
         else:
             return jsonify({'error': 'Formato de archivo no admitido. Cargue un archivo CSV o Excel.'})
 
-        data.columns = [col.lower() for col in data.columns]  # Convertir a minúsculas
+        data.columns = [col.lower() for col in data.columns]  
         categorias_column = find_category_column(data)
         marcas_column = find_brand_column(data)
         precio_unitario_column = find_price_column(data)
-        nombre_column = find_name_column(data)  # Nueva columna "Nombre"
+        nombre_column = find_name_column(data)  
 
         if categorias_column and marcas_column and precio_unitario_column and nombre_column:
-            encoder = OneHotEncoder(sparse=False, drop='first', handle_unknown='ignore')
-            X_encoded = encoder.fit_transform(data[[categorias_column, marcas_column, nombre_column]])  # Agregar "Nombre" aquí
+            encoder = OneHotEncoder(drop='first', handle_unknown='ignore')
+            X_encoded = encoder.fit_transform(data[[categorias_column, marcas_column, nombre_column]])  
 
             X_numeric = data[precio_unitario_column].values
-            X_final = np.column_stack((X_encoded, X_numeric))
+            X_final = np.column_stack((X_encoded.toarray(), X_numeric))
 
-            # Calcula umbrales separados para cada categoría, marca y nombre
             unique_categories = data[categorias_column].unique()
             unique_brands = data[marcas_column].unique()
             unique_names = data[nombre_column].unique()
@@ -606,7 +620,7 @@ def admin_ResultadosAnalisis():
             for category in unique_categories:
                 for brand in unique_brands:
                     for name in unique_names:
-                        subset = data[(data[categorias_column] == category) & (data[marcas_column] == brand) & (data[nombre_column] == name)]  # Modificar aquí
+                        subset = data[(data[categorias_column] == category) & (data[marcas_column] == brand) & (data[nombre_column] == name)]  
                         mean = subset[precio_unitario_column].mean()
                         std = subset[precio_unitario_column].std()
                         upper_threshold = mean + 2 * std
@@ -628,7 +642,7 @@ def admin_ResultadosAnalisis():
 
             anomalías = data.iloc[indices_anomalías]
 
-            data.columns = [col.upper() if col != 'anomalia_etiqueta' else col for col in data.columns]  # Convertir a mayúsculas
+            data.columns = [col.upper() if col != 'anomalia_etiqueta' else col for col in data.columns]  
 
             data_json = data.to_json(orient='split')
 
@@ -637,7 +651,6 @@ def admin_ResultadosAnalisis():
             return jsonify({'error': 'No se encontraron columnas relacionadas a CATEGORIA, MARCA, NOMBRE y PRECIO'})
     else:
         return jsonify({'error': 'No se ha cargado ningún archivo'})
-'''
 
 
 
