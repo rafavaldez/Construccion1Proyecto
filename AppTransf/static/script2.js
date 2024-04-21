@@ -151,12 +151,12 @@ document.addEventListener("DOMContentLoaded", function () {
           if (response.data) {
             let tableHTML = createTable(response.data);
             resultsArea.innerHTML = tableHTML;
-
+    
             // Inicializar DataTables en la tabla recién creada
             $('#myTable').DataTable({
               lengthChange: false,
               lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, "Todos"] ], // Define las opciones de cantidad de filas por página
-  pageLength: 25,
+              pageLength: 25,
               searching: false,
               language: {
                 info: "Mostrando _END_ de _TOTAL_ registros",
@@ -171,15 +171,16 @@ document.addEventListener("DOMContentLoaded", function () {
               }
             });
           } else {
-            // Manejar errores si es necesario
-            resultsArea.innerHTML = "<p>Error: No se encontraron datos.</p>";
+            // Mostrar mensaje de error si no se encontraron datos
+            resultsArea.innerHTML = "<p>Error: " + response.error + "</p>";
           }
         } else {
           // Manejar errores de solicitud si es necesario
-          resultsArea.innerHTML = "<p>Error de solicitud</p>";
+          resultsArea.innerHTML = "<p>Error de solicitud: " + xhr.statusText + "</p>";
         }
       }
     };
+    
 
     let data = new FormData(form);
     xhr.send(data);

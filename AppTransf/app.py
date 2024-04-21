@@ -197,17 +197,18 @@ def login_comun():
     user = usuarios.find_one({"dni": dni})
 
     if user:
-        #if check_password_hash(user["contrasenaHash"], password):
-        if (user["contrasenaHash"], password):
+        if user["contrasenaHash"] == password:  # Verifica si la contraseña es correcta
             session["user_id"] = str(user["_id"])
             print("Inicio de sesión exitoso")  # Imprime el mensaje de éxito
-            return redirect(url_for('admin_home', message='Inicio de sesión exitoso'))
+            return redirect(url_for('admin_home'))
+
         else:
             print("Contraseña incorrecta")  # Imprime el mensaje de contraseña incorrecta
-            return render_template("admin/index.html", error="Contraseña incorrecta")
+            return "Contraseña incorrecta", 400  # Devuelve el mensaje de error con código de estado 400
     else:
         print("Usuario no encontrado")  # Imprime el mensaje de usuario no encontrado
-        return render_template("admin/index.html", error="Usuario no encontrado")
+        return "Usuario no encontrado", 404  # Devuelve el mensaje de error con código de estado 404
+
 
 
 

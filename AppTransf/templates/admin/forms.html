@@ -585,14 +585,15 @@ table.dataTable.no-footer {
 
             <div class="wrapper">
               <header>Carga Archivo</header>
-              <form action="#">
-                <input class="file-input" type="file" name="file" hidden>
+              <form action="#" enctype="multipart/form-data">
+                <input class="file-input" type="file" name="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" hidden>
                 <i class="fas fa-cloud-upload-alt"></i>
                 <p>Explorar Archivo csv o excel</p>
               </form>
               <section class="progress-area"></section>
               <section class="uploaded-area"></section>
             </div>
+            
 
             <br><br>
         
