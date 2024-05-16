@@ -125,7 +125,7 @@ def registrar_usuario2():
 
     return jsonify({"mensaje": "Error al registrar usuario"}), 400
 
-
+#Importar datos 
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -191,8 +191,13 @@ def authenticateGoogle():
 
 @app.route("/login-comun", methods=['POST'])
 def login_comun():
-    dni = request.form["dni"]
-    password = request.form["password"]
+    dni = request.form.get("dni")
+    password = request.form.get("password")
+
+    # Verifica si los datos no están vacíos
+    if not dni or not password:
+        print("Datos de entrada incompletos")
+        return "Datos de entrada incompletos", 400  # Devuelve el mensaje de error con código de estado 400
 
     user = usuarios.find_one({"dni": dni})
 
@@ -750,6 +755,8 @@ def editar_usuario():
         return jsonify({"mensaje": "Usuario editado exitosamente"}), 200
 
     return jsonify({"mensaje": "Error al editar usuario"}), 400
+
+    
 from bson.objectid import ObjectId
 @app.route("/api/usuarios2/eliminar/<string:document_id>", methods=["DELETE"])
 def eliminar_usuario(document_id):
