@@ -772,62 +772,61 @@ table.dataTable.no-footer {
 </div>
 
 
-<script>
+
+
+
+
+
+
+
+
   
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
   function showDocumentId(button) {
+    const documentId = button.getAttribute("data-document-id");
     
-      const documentId = button.getAttribute("data-document-id");
-      alert("El data-document-id es: " + documentId);
-      var detallesList = {{ detalles_list_json | safe }};
-      console.log(detallesList); 
-      const documento = detallesList.find((detalle) => detalle._id.$oid === documentId);
 
-            if (documento) {
-                const modal = document.getElementById('modal');
-                const modalContent = document.getElementById('modal-content');
+    // Asegúrate de que detalles_list_json se pasa correctamente como un string JSON
+    var detallesList = JSON.parse('{{ detalles_list_json | tojson | safe }}');
 
-                // Mostrar el modal
-                modal.style.display = 'block';
+    console.log(detallesList);
 
-                // Construir el contenido del modal con los detalles del documento
-                modalContent.innerHTML = `
-                    <p>ID: ${documento._id}</p>
-                    <p>Nombre de Usuario: ${documento.nombreUsuario}</p>
-                    <p>Nombre: ${documento.nombre}</p>
-                    <p>Apellido: ${documento.apellido}</p>
-                    <p>DNI: ${documento.dni}</p>
-                    <p>Correo Electrónico: ${documento.correoElectronico}</p>
-                    <p>Fecha de Registro: ${documento.fechaRegistro}</p>
-                    <p>Roles: ${documento.roles.join(', ')}</p>
-                `;
-            } else {
-                alert("¡Documento no encontrado!");
-            }
+    // Busca el documento por ID
+    const documento = detallesList.find((detalle) => detalle._id.$oid === documentId);
 
+    if (documento) {
+      // Mostrar los detalles del documento en un modal de SweetAlert2
+      Swal.fire({
+        title: "Detalles del Documentosadasd",
+        html: `
+          <p>ID: ${documento._id.$oid}</p>
+          <p>Nombre de Usuario: ${documento.nombreUsuario}</p>
+          <p>Nombre: ${documento.nombre}</p>
+          <p>Apellido: ${documento.apellido}</p>
+          <p>DNI: ${documento.dni}</p>
+          <p>Correo Electrónico: ${documento.correoElectronico}</p>
+          <p>Fecha de Registro: ${documento.fechaRegistro}</p>
+          <p>Roles: ${documento.roles.join(', ')}</p>
+        `,
+        icon: "info",
+        confirmButtonText: "Cerrar",
+      });
+    } else {
+      alert("¡Documento no encontrado!");
+    }
   }
-  </script>
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
- 
 
   function eliminarDocumento(btn) {
   const documentId = btn.getAttribute("data-document-id");

@@ -68,6 +68,9 @@ table.dataTable.no-footer {
   </style>
 
   </head>
+
+
+
   <body>
     <div
       class="flex h-screen bg-gray-50 dark:bg-gray-900"
@@ -534,40 +537,13 @@ table.dataTable.no-footer {
                     Total de Usuarios
                   </p>
                   <p
-                    class="text-lg font-semibold text-gray-700 dark:text-gray-200"
+                    class="text-lg font-semibold text-gray-700 dark:text-gray-200" id="userCount"
                   >
                     1
                   </p>
                 </div>
               </div>
-              <!-- Card -->
-              <div
-                class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-              >
-                <div
-                  class="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500"
-                >
-                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fill-rule="evenodd"
-                      d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </div>
-                <div>
-                  <p
-                    class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400"
-                  >
-                    Total de Anomalias 
-                  </p>
-                  <p
-                    class="text-lg font-semibold text-gray-700 dark:text-gray-200"
-                  >
-                    5
-                  </p>
-                </div>
-              </div>
+             
               
               
               
@@ -613,67 +589,79 @@ table.dataTable.no-footer {
   }
 </style>
 
-<button id="openModalBtn" class="custom-button btn btn-primary">Agregar</button>
+<button id="openModalBtn" onclick="addUser()" class="custom-button btn btn-primary">Agregar</button>
 <br>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
   <script>
-    document.getElementById("openModalBtn").addEventListener("click", function() {
-      Swal.fire({
-        title: "Registro de Usuario",
-        html:
-          '<input id="nombreUsuario" class="swal2-input" placeholder="Nombre de Usuario" required>' +
-          '<input id="nombre" class="swal2-input" placeholder="Nombre" required>' +
-          '<input id="apellido" class="swal2-input" placeholder="Apellido" required>' +
-          '<input id="dni" class="swal2-input" placeholder="DNI" required>' +
-          '<input id="correoElectronico" class="swal2-input" placeholder="Correo Electrónico" required>' +
-          '<input id="contrasenaHash" class="swal2-input" type="password" placeholder="Contraseña" required>' +
-          '<input id="fechaRegistro" class="swal2-input" type="datetime-local" placeholder="Fecha de Registro" required>' +
-          '<input id="roles" class="swal2-input" placeholder="Roles (Separados por comas)" required>',
-        icon: "info",
-        showCancelButton: true,
-        confirmButtonText: "Registrar",
-        cancelButtonText: "Cancelar",
-        preConfirm: () => {
-          const nombreUsuario = document.getElementById("nombreUsuario").value;
-          const nombre = document.getElementById("nombre").value;
-          const apellido = document.getElementById("apellido").value;
-          const dni = document.getElementById("dni").value;
-          const correoElectronico = document.getElementById("correoElectronico").value;
-          const contrasenaHash = document.getElementById("contrasenaHash").value;
-          const fechaRegistro = document.getElementById("fechaRegistro").value;
-          const roles = document.getElementById("roles").value.split(",").map((role) => role.trim());
+   
 
-          return {
-            nombreUsuario,
-            nombre,
-            apellido,
-            dni,
-            correoElectronico,
-            contrasenaHash,
-            fechaRegistro,
-            roles,
-          };
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const userData = result.value;
-          fetch("/api/usuarios2", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(userData),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              Swal.fire("¡Registro exitoso!", data.mensaje, "success");
-            })
-            .catch((error) => {
-              Swal.fire("¡Error!", error.message, "error");
+
+    function addUser() {
+            Swal.fire({
+                title: "Registrar Usuario",
+                html: `
+                    <input id="nombreUsuario" class="swal2-input" placeholder="Nombre de Usuario" required>
+                    <input id="nombre" class="swal2-input" placeholder="Nombre" required>
+                    <input id="apellido" class="swal2-input" placeholder="Apellido" required>
+                    <input id="dni" class="swal2-input" placeholder="DNI" required>
+                    <input id="correoElectronico" class="swal2-input" placeholder="Correo Electrónico" required>
+                    <input id="contrasenaHash" class="swal2-input" type="password" placeholder="Contraseña" required>
+                    <input id="fechaRegistro" class="swal2-input" type="datetime-local" placeholder="Fecha de Registro" required>
+                    <input id="roles" class="swal2-input" placeholder="Roles (Separados por comas)" required>
+                    <select id="activo" class="swal2-input">
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                `,
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonText: "Registrar",
+                cancelButtonText: "Cancelar",
+                preConfirm: () => {
+                    const nombreUsuario = document.getElementById("nombreUsuario").value;
+                    const nombre = document.getElementById("nombre").value;
+                    const apellido = document.getElementById("apellido").value;
+                    const dni = document.getElementById("dni").value;
+                    const correoElectronico = document.getElementById("correoElectronico").value;
+                    const contrasenaHash = document.getElementById("contrasenaHash").value;
+                    const fechaRegistro = document.getElementById("fechaRegistro").value;
+                    const roles = document.getElementById("roles").value.split(",").map((role) => role.trim());
+                    const activoElement = document.getElementById("activo");
+                    const activo = activoElement.value === "true";
+
+                    return {
+                        nombreUsuario,
+                        nombre,
+                        apellido,
+                        dni,
+                        correoElectronico,
+                        contrasenaHash,
+                        fechaRegistro,
+                        roles,
+                        activo,
+                    };
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const userData = result.value;
+                    fetch("/api/usuarios2", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(userData),
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        Swal.fire("¡Registro exitoso!", data.mensaje, "success");
+                        renderTable(data.usuarios);
+                    })
+                    .catch((error) => {
+                        Swal.fire("¡Error!", error.message, "error");
+                    });
+                }
             });
         }
-      });
-    });
   </script>
 
             
@@ -772,40 +760,152 @@ table.dataTable.no-footer {
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
 <script>
-  
-  function showDocumentId(button) {
-    
-      const documentId = button.getAttribute("data-document-id");
-      alert("El data-document-id es: " + documentId);
-      var detallesList = {{ detalles_list_json | safe }};
-      console.log(detallesList); 
-      const documento = detallesList.find((detalle) => detalle._id.$oid === documentId);
+  // Convertimos el JSON a un objeto JavaScript en el lado del cliente
+  const detallesListJson = '{{ detalles_list_json | safe }}';
+  const detallesList = JSON.parse(detallesListJson);
 
-            if (documento) {
-                const modal = document.getElementById('modal');
-                const modalContent = document.getElementById('modal-content');
-
-                // Mostrar el modal
-                modal.style.display = 'block';
-
-                // Construir el contenido del modal con los detalles del documento
-                modalContent.innerHTML = `
-                    <p>ID: ${documento._id}</p>
-                    <p>Nombre de Usuario: ${documento.nombreUsuario}</p>
-                    <p>Nombre: ${documento.nombre}</p>
-                    <p>Apellido: ${documento.apellido}</p>
-                    <p>DNI: ${documento.dni}</p>
-                    <p>Correo Electrónico: ${documento.correoElectronico}</p>
-                    <p>Fecha de Registro: ${documento.fechaRegistro}</p>
-                    <p>Roles: ${documento.roles.join(', ')}</p>
-                `;
-            } else {
-                alert("¡Documento no encontrado!");
-            }
-
+  function formatDate(dateString) {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2);
+      const day = ('0' + date.getDate()).slice(-2);
+      const hours = ('0' + date.getHours()).slice(-2);
+      const minutes = ('0' + date.getMinutes()).slice(-2);
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
-  </script>
+
+  function showDocumentId(button) {
+            const documentId = button.getAttribute("data-document-id");
+            const documento = detallesList.find(detalle => detalle._id.$oid === documentId) || {};
+
+            const formattedDate = documento.fechaRegistro ? formatDate(documento.fechaRegistro) : '';
+
+            Swal.fire({
+                title: documentId ? "Editar Detalles del Documento" : "Registrar Usuario",
+                html: `
+                    <input id="nombreUsuario" class="swal2-input" placeholder="Nombre de Usuario" value="${documento.nombreUsuario || ''}" required>
+                    <input id="nombre" class="swal2-input" placeholder="Nombre" value="${documento.nombre || ''}" required>
+                    <input id="apellido" class="swal2-input" placeholder="Apellido" value="${documento.apellido || ''}" required>
+                    <input id="dni" class="swal2-input" placeholder="DNI" value="${documento.dni || ''}" required>
+                    <input id="correoElectronico" class="swal2-input" placeholder="Correo Electrónico" value="${documento.correoElectronico || ''}" required>
+                    <input id="contrasenaHash" class="swal2-input" type="password" placeholder="Contraseña" value="${documento.contrasenaHash || ''}" required>
+                    <input id="fechaRegistro" class="swal2-input" type="datetime-local" placeholder="Fecha de Registro" value="${formattedDate}" required>
+                    <input id="roles" class="swal2-input" placeholder="Roles (Separados por comas)" value="${documento.roles ? documento.roles.join(', ') : ''}" required>
+                    <select id="activo" class="swal2-input">
+                        <option value="true" ${documento.activo ? 'selected' : ''}>Activo</option>
+                        <option value="false" ${!documento.activo ? 'selected' : ''}>Inactivo</option>
+                    </select>
+                `,
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonText: documentId ? "Guardar" : "Registrar",
+                cancelButtonText: "Cancelar",
+                preConfirm: () => {
+                    const nombreUsuario = document.getElementById("nombreUsuario").value;
+                    const nombre = document.getElementById("nombre").value;
+                    const apellido = document.getElementById("apellido").value;
+                    const dni = document.getElementById("dni").value;
+                    const correoElectronico = document.getElementById("correoElectronico").value;
+                    const contrasenaHash = document.getElementById("contrasenaHash").value;
+                    const fechaRegistro = document.getElementById("fechaRegistro").value;
+                    const roles = document.getElementById("roles").value.split(",").map((role) => role.trim());
+                    const activoElement = document.getElementById("activo");
+                    const activo = activoElement.value === "true";
+
+                    
+
+                    return {
+                        _id: documentId ? documento._id.$oid : undefined,
+                        nombreUsuario,
+                        nombre,
+                        apellido,
+                        dni,
+                        correoElectronico,
+                        contrasenaHash,
+                        fechaRegistro,
+                        roles,
+                        activo,
+                    };
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const userData = result.value;
+                    console.log(JSON.stringify(userData)); // Depurar los datos capturados
+                    fetch("/api/usuarios2", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(userData),
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        Swal.fire("¡Operación exitosa!", data.mensaje, "success");
+                        console.log(data.usuarios)
+
+                        renderTable(data.usuarios);
+                    })
+                    .catch((error) => {
+                        Swal.fire("¡Error!", error.message, "error");
+                    });
+                }
+            });
+        }
+
+
+        function renderTable(users) {
+          const userCount = users.length;
+        document.getElementById('userCount').textContent = userCount;
+        const tableBody = document.querySelector('tbody');
+        tableBody.innerHTML = '';
+        users.forEach(detalle => {
+            const row = document.createElement('tr');
+            row.className = 'text-gray-700 dark:text-gray-400';
+            row.innerHTML = `
+                <td class="px-4 py-3">
+                    <div class="flex items-center text-sm">
+                        <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                            <img class="object-cover w-full h-full rounded-full" src="https://img.freepik.com/vector-premium/icono-circulo-usuario-anonimo-ilustracion-vector-estilo-plano-sombra_520826-1931.jpg" alt="" loading="lazy" />
+                            <div class="absolute inset-0 rounded-full shadow-inner" aria-hidden="true"></div>
+                        </div>
+                        <div>
+                            <p class="font-semibold">${detalle.nombreUsuario}</p>
+                            <p class="text-xs text-gray-600 dark:text-gray-400">Usuario</p>
+                        </div>
+                    </div>
+                </td>
+                <td class="px-4 py-3">${detalle.nombre}</td>
+                <td class="px-4 py-3">${detalle.apellido}</td>
+                <td class="px-4 py-3">${detalle.dni}</td>
+                <td class="px-4 py-3">${detalle.correoElectronico}</td>
+                <td class="px-4 py-3">${detalle.fechaRegistro}</td>
+                <td class="px-4 py-3">${detalle.roles.join(', ')}</td>
+                <td class="px-4 py-3 text-xs">
+                    <span class="px-2 py-1 font-semibold leading-tight ${detalle.activo ? 'text-blue-700 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-700' : 'text-red-700 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-700'}">
+                        ${detalle.activo ? 'Activo' : 'Inactivo'}
+                    </span>
+                </td>
+                <td class="px-4 py-3">
+                    <div class="flex items-center space-x-4 text-sm">
+                        <button class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray"
+                            aria-label="Edit"
+                            data-document-id="${detalle._id.$oid}"
+                            onclick="showDocumentId(this)">
+                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+  
+</script>
+
 
 
 
@@ -851,6 +951,8 @@ table.dataTable.no-footer {
             // Elimina la fila de la tabla HTML
             const filaAEliminar = btn.closest("tr");
             filaAEliminar.remove();
+            
+            document.getElementById('userCount').textContent = data.usuarios.length;
 
             Swal.fire("Eliminado", "El usuario ha sido eliminado correctamente.", "success").then(() => {
               // Puedes realizar alguna acción adicional después de eliminar el usuario
@@ -874,6 +976,11 @@ table.dataTable.no-footer {
 
             <script>
               $(document).ready(function() {
+                const detallesListJson = '{{ detalles_list_json | safe }}';
+  const detallesList = JSON.parse(detallesListJson);
+                const userCount = detallesList.length;
+        document.getElementById('userCount').textContent = userCount;
+
                 $('#myTable').DataTable({
                   lengthChange: false, // Deshabilita la opción de cambiar la cantidad de registros mostrados por página
                   searching: false, // Deshabilita la búsqueda en la tabla

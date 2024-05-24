@@ -103,12 +103,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 
-@app.route("/api/usuarios2", methods=["POST"])
+@app.route('/api/usuarios2', methods=['POST'])
 def registrar_usuario2():
     data = request.get_json()
 
     if data:
-        nuevo_usuario = {
+        usuario_id = data.get("_id")
+        usuario_data = {
             "nombreUsuario": data.get("nombreUsuario"),
             "nombre": data.get("nombre"),
             "apellido": data.get("apellido"),
@@ -117,13 +118,30 @@ def registrar_usuario2():
             "contrasenaHash": data.get("contrasenaHash"),
             "fechaRegistro": data.get("fechaRegistro"),
             "roles": data.get("roles"),
+            "activo": data.get("activo"),
         }
 
-        usuarios.insert_one(nuevo_usuario)
+        if usuario_id:
+            # Si existe _id, actualizar el documento existente
+            result = usuarios.update_one(
+                {"_id": ObjectId(usuario_id)},
+                {"$set": usuario_data},
+                upsert=True
+            )
+            mensaje = "Usuario actualizado exitosamente" if result.modified_count > 0 else "Usuario creado exitosamente"
+        else:
+            # Si no existe _id, crear un nuevo documento
+            result = usuarios.insert_one(usuario_data)
+            mensaje = "Usuario registrado exitosamente"
 
-        return jsonify({"mensaje": "Usuario registrado exitosamente"}), 201
+        # Obtener todos los usuarios actuales después de la operación
+        usuarios_actuales = list(usuarios.find({}))
+        usuarios_json = json.loads(json_util.dumps(usuarios_actuales))
+
+        return jsonify({"mensaje": mensaje, "usuarios": usuarios_json}), 201
 
     return jsonify({"mensaje": "Error al registrar usuario"}), 400
+
 
 #Importar datos 
 
@@ -768,7 +786,9 @@ def eliminar_usuario(document_id):
         result = usuarios.delete_one({"_id": obj_id})
         
         if result.deleted_count > 0:
-            return jsonify({"mensaje": "Usuario eliminado exitosamente"}), 200
+            usuarios_actuales = list(usuarios.find({}))
+            usuarios_json = json.loads(json_util.dumps(usuarios_actuales))
+            return jsonify({"mensaje": "Usuario eliminado exitosamente", "usuarios": usuarios_json}), 201
         else:
             return jsonify({"mensaje": "Usuario no encontrado"}), 404
     except Exception as e:
@@ -782,9 +802,7 @@ from flask import json
 @app.route('/admin')
 def admin_home():
     detalles_list = list(usuarios.find({}))  # Incluimos el campo _id
-
     detalles_list_json = json.dumps(detalles_list, default=json_util.default)
-
     return render_template('admin/index.html', detalles_list=detalles_list, detalles_list_json=detalles_list_json)
 
 
